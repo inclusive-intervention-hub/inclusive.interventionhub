@@ -6,7 +6,7 @@ backend:
   app_id: Ov23liwMN6HGCNEmaetv
 
 media_folder: "docs/photos"
-public_folder: "./photos"
+public_folder: "/photos"
 
 collections:
 
