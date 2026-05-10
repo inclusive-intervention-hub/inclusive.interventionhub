@@ -50,8 +50,12 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ── Shop Filters ───────────────────────────────────────── */
+<<<<<<< HEAD
   const productsGrid =
     document.getElementById('shop-resources-container') || document.getElementById('productsGrid');
+=======
+  const productsGrid = document.getElementById('productsGrid');
+>>>>>>> b72e84ba372a10cb5c35363a540226eb5f261a2d
   const emptyState = document.getElementById('emptyState');
   const searchInput = document.getElementById('shopSearch');
 
@@ -96,12 +100,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardCategory = (card.dataset.category || '').toLowerCase();
         const cardTitle = (card.dataset.title || '').toLowerCase();
 
+<<<<<<< HEAD
         const audienceMatch =
           activeAudience === 'all' ||
           cardAudience === 'all' ||
           cardAudience.split(/\s+/).filter(Boolean).includes(activeAudience);
         const categoryMatch =
           activeCategory === 'all' || cardCategory === 'all' || cardCategory === activeCategory;
+=======
+        const audienceMatch = activeAudience === 'all' || cardAudience.includes(activeAudience);
+        const categoryMatch = activeCategory === 'all' || cardCategory === activeCategory;
+>>>>>>> b72e84ba372a10cb5c35363a540226eb5f261a2d
         const searchMatch = searchQuery === '' || cardTitle.includes(searchQuery);
 
         if (audienceMatch && categoryMatch && searchMatch) {
@@ -118,6 +127,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
+<<<<<<< HEAD
     function applyShopUrlAudienceParam() {
       const params = new URLSearchParams(window.location.search);
       const catParam = params.get('cat');
@@ -133,6 +143,15 @@ document.addEventListener('DOMContentLoaded', () => {
       applyShopUrlAudienceParam();
       applyFilters();
     });
+=======
+    // Handle URL param for pre-filtering (e.g. shop.html?cat=sped)
+    const params = new URLSearchParams(window.location.search);
+    const catParam = params.get('cat');
+    if (catParam) {
+      const matchPill = document.querySelector(`.filter-pill[data-filter="audience"][data-value="${catParam}"]`);
+      if (matchPill) matchPill.click();
+    }
+>>>>>>> b72e84ba372a10cb5c35363a540226eb5f261a2d
   }
 
   /* ── Contact Form ───────────────────────────────────────── */
