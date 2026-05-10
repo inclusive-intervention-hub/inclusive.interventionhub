@@ -1,0 +1,487 @@
+/**
+ * Inclusive Materials — CMS content loader (Sveltia / Git-backed JSON & Markdown)
+ * Fetches site root-relative paths under /_data/… Graceful no-op on 404 or errors.
+ *
+ * GitHub API (below) is only used to list filenames under docs/_data/resources and docs/_data/blog,
+ * because GitHub Pages does not serve directory indexes. If you fork this repo or rename it,
+ * keep these in sync with docs/admin/config.yml → backend.repo and backend.branch.
+ */
+
+(function () {
+  'use strict';
+
+  /** Owner/repo slug, same as backend.repo in admin/config.yml (e.g. inclusive-materials/inclusive.materials). */
+  var GITHUB_REPO = 'inclusive-materials/inclusive.materials';
+  /** Same as backend.branch in admin/config.yml (usually main). */
+  var GITHUB_BRANCH = 'main';
+
+  var SVG_PLACEHOLDER =
+    '<svg class="product-card__placeholder" width="48" height="48" viewBox="0 0 48 48" fill="none"><rect x="6" y="6" width="36" height="36" rx="6" stroke="currentColor" stroke-width="2"/><path d="M16 24h16M24 16v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>';
+
+  var ARTICLE_ICON_SVG =
+    '<svg width="32" height="32" viewBox="0 0 32 32" fill="none"><path d="M8 8h16M8 14h16M8 20h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>';
+
+  var DATE_ICON_SMALL =
+    '<svg width="12" height="12" viewBox="0 0 12 12" fill="none"><circle cx="6" cy="6" r="5" stroke="currentColor" stroke-width="1.2"/><path d="M6 3.5V6l1.5 1.5" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+
+  var DATE_ICON_MEDIUM =
+    '<svg width="13" height="13" viewBox="0 0 13 13" fill="none"><circle cx="6.5" cy="6.5" r="5.5" stroke="currentColor" stroke-width="1.2"/><path d="M6.5 4V6.5l2 2" stroke="currentColor" stroke-width="1.2" stroke-linecap="round"/></svg>';
+
+  function escapeHtml(text) {
+    if (text == null || text === '') return '';
+    var div = document.createElement('div');
+    div.textContent = String(text);
+    return div.innerHTML;
+  }
+
+  function renderMarked(markdown) {
+    if (!markdown || typeof markdown !== 'string') return '';
+    if (typeof marked !== 'undefined' && marked.parse) {
+      try {
+        return marked.parse(markdown, { mangle: false, headerIds: false });
+      } catch (e) {
+        return escapeHtml(markdown);
+      }
+    }
+    return escapeHtml(markdown);
+  }
+
+  function fetchJson(path) {
+    return fetch(path)
+      .then(function (res) {
+        if (!res.ok) return Promise.reject(new Error('not ok'));
+        return res.json();
+      })
+      .catch(function () {
+        return null;
+      });
+  }
+
+  function fetchText(path) {
+    return fetch(path)
+      .then(function (res) {
+        if (!res.ok) return Promise.reject(new Error('not ok'));
+        return res.text();
+      })
+      .catch(function () {
+        return null;
+      });
+  }
+
+  /**
+   * List files in repo folder via GitHub API (public repo, unauthenticated).
+   * Returns [] on failure (rate limit, network, etc.).
+   */
+  function listRepoFolder(repoDirPath) {
+    var pathSeg = String(repoDirPath || '').replace(/^\/+/, '');
+    var url =
+      'https://api.github.com/repos/' +
+      GITHUB_REPO +
+      '/contents/' +
+      pathSeg +
+      '?ref=' +
+      encodeURIComponent(GITHUB_BRANCH);
+    return fetch(url)
+      .then(function (res) {
+        if (!res.ok) return Promise.reject(new Error('github list failed'));
+        return res.json();
+      })
+      .catch(function () {
+        return [];
+      });
+  }
+
+  function applyDataCmsFields(root, data) {
+    if (!root || !data) return;
+    root.querySelectorAll('[data-cms]').forEach(function (el) {
+      var key = el.getAttribute('data-cms');
+      if (!key || !(key in data) || data[key] == null || data[key] === '') return;
+      var val = data[key];
+      if (key === 'email' && el.tagName === 'A') {
+        var email = String(val).trim();
+        el.setAttribute('href', 'mailto:' + email);
+        el.textContent = email;
+        return;
+      }
+      if (key === 'hero_title' || key === 'bio_full') {
+        el.innerHTML = key === 'bio_full' ? renderMarked(val) : String(val);
+      } else {
+        el.textContent = typeof val === 'string' ? val : String(val);
+      }
+    });
+    root.querySelectorAll('[data-cms-src]').forEach(function (el) {
+      var key = el.getAttribute('data-cms-src');
+      if (!key || !(key in data) || !data[key]) return;
+      el.setAttribute('src', data[key]);
+      el.classList.remove('hidden');
+    });
+    root.querySelectorAll('[data-cms-href]').forEach(function (el) {
+      var key = el.getAttribute('data-cms-href');
+      if (!key || !(key in data) || !data[key]) return;
+      el.setAttribute('href', data[key]);
+      el.classList.remove('hidden');
+    });
+  }
+
+  function hideEmptySocial(root, data, keys) {
+    keys.forEach(function (key) {
+      if (!data[key] || String(data[key]).trim() === '') {
+        root.querySelectorAll('[data-cms-href="' + key + '"]').forEach(function (el) {
+          el.classList.add('hidden');
+        });
+      }
+    });
+  }
+
+  function normalizeResource(raw) {
+    if (!raw || typeof raw !== 'object') return null;
+    return {
+      title: raw.title || '',
+      description: raw.description || '',
+      price: raw.price || '',
+      badge: raw.badge || '',
+      image: raw.image || '',
+      url: raw.url || './shop.html',
+      featured: raw.featured !== false,
+      audience: raw.audience || 'all',
+      category: raw.category || 'all',
+    };
+  }
+
+  function buildProductCard(resource, opts) {
+    var r = normalizeResource(resource);
+    if (!r || !r.title) return '';
+    var imgInner = SVG_PLACEHOLDER;
+    if (r.image) {
+      imgInner =
+        '<img src="' +
+        escapeHtml(r.image) +
+        '" alt="' +
+        escapeHtml(r.title) +
+        '" loading="lazy" width="400" height="240"/>';
+    }
+    var badgeHtml = r.badge
+      ? '<span class="product-card__badge">' + escapeHtml(r.badge) + '</span>'
+      : '';
+    var aud = String(r.audience || 'all').toLowerCase().trim();
+    var cat = String(r.category || 'all').toLowerCase().trim();
+    var titleLower = r.title.toLowerCase();
+    var tagsHtml = '';
+    if (opts && opts.includeTags !== false) {
+      tagsHtml =
+        '<div class="product-card__tags"><span class="tag">' +
+        escapeHtml(r.badge || 'Resource') +
+        '</span></div>';
+    }
+    return (
+      '<div class="product-card" data-audience="' +
+      escapeHtml(aud) +
+      '" data-category="' +
+      escapeHtml(cat) +
+      '" data-title="' +
+      escapeHtml(titleLower) +
+      '">' +
+      '<div class="product-card__img">' +
+      imgInner +
+      badgeHtml +
+      '</div>' +
+      '<div class="product-card__body">' +
+      tagsHtml +
+      '<h3>' +
+      escapeHtml(r.title) +
+      '</h3>' +
+      '<p>' +
+      escapeHtml(r.description) +
+      '</p>' +
+      '<div class="product-card__footer">' +
+      '<span class="product-card__price">' +
+      escapeHtml(r.price) +
+      '</span>' +
+      '<a href="' +
+      escapeHtml(r.url) +
+      '" class="btn btn--amber">Buy Now ↗</a>' +
+      '</div></div></div>'
+    );
+  }
+
+  function parseFrontmatterMarkdown(text) {
+    var result = { meta: {}, body: text || '', raw: text || '' };
+    if (!text || typeof text !== 'string') return result;
+    var m = text.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/);
+    if (!m) {
+      result.body = text;
+      return result;
+    }
+    var fm = m[1];
+    result.body = m[2] || '';
+    fm.split(/\r?\n/).forEach(function (line) {
+      var idx = line.indexOf(':');
+      if (idx === -1) return;
+      var key = line.slice(0, idx).trim();
+      var val = line.slice(idx + 1).trim();
+      if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+        val = val.slice(1, -1);
+      }
+      result.meta[key] = val;
+    });
+    return result;
+  }
+
+  function parseBlogMeta(meta, slug) {
+    var published = meta.published;
+    if (published === 'false' || published === false) return null;
+    var title = meta.title || slug;
+    var dateRaw = meta.date || '';
+    var t = Date.parse(dateRaw);
+    if (isNaN(t)) t = 0;
+    var summary = meta.summary || '';
+    var image = meta.image || '';
+    return {
+      slug: slug,
+      title: title,
+      date: new Date(t),
+      dateRaw: dateRaw,
+      summary: summary,
+      image: image,
+      sortKey: t,
+    };
+  }
+
+  function formatBlogDate(d) {
+    if (!(d instanceof Date) || isNaN(d.getTime())) return '';
+    try {
+      return d.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      });
+    } catch (e) {
+      return '';
+    }
+  }
+
+  function blogRowHtml(post) {
+    var imgInner = ARTICLE_ICON_SVG;
+    if (post.image) {
+      imgInner =
+        '<img src="' +
+        escapeHtml(post.image) +
+        '" alt="" loading="lazy" width="320" height="200"/>';
+    }
+    var dateStr = formatBlogDate(post.date);
+    return (
+      '<article class="article-row" id="post-' +
+      escapeHtml(post.slug) +
+      '">' +
+      '<div class="article-row__img">' +
+      imgInner +
+      '</div>' +
+      '<div>' +
+      '<div class="article-row__date">' +
+      DATE_ICON_MEDIUM +
+      escapeHtml(dateStr) +
+      '</div>' +
+      '<h2>' +
+      escapeHtml(post.title) +
+      '</h2>' +
+      '<p>' +
+      escapeHtml(post.summary) +
+      '</p>' +
+      '<a href="./blog.html#post-' +
+      escapeHtml(post.slug) +
+      '" class="read-more">Read More →</a>' +
+      '</div></article>'
+    );
+  }
+
+  function blogMiniHtml(post) {
+    var imgInner = ARTICLE_ICON_SVG;
+    if (post.image) {
+      imgInner =
+        '<img src="' +
+        escapeHtml(post.image) +
+        '" alt="" loading="lazy" width="400" height="240"/>';
+    }
+    var dateStr = formatBlogDate(post.date);
+    return (
+      '<div class="article-mini" id="post-' +
+      escapeHtml(post.slug) +
+      '">' +
+      '<div class="article-mini__img">' +
+      imgInner +
+      '</div>' +
+      '<span class="article-mini__date">' +
+      DATE_ICON_SMALL +
+      escapeHtml(dateStr) +
+      '</span>' +
+      '<h3>' +
+      escapeHtml(post.title) +
+      '</h3>' +
+      '<p>' +
+      escapeHtml(post.summary) +
+      '</p>' +
+      '<a href="./blog.html#post-' +
+      escapeHtml(post.slug) +
+      '" class="read-more">Read More →</a>' +
+      '</div>'
+    );
+  }
+
+  function sortPostsDesc(posts) {
+    return posts.slice().sort(function (a, b) {
+      return b.sortKey - a.sortKey;
+    });
+  }
+
+  async function loadResourceFilesList() {
+    var entries = await listRepoFolder('docs/_data/resources');
+    if (!Array.isArray(entries) || !entries.length) return [];
+    return entries
+      .filter(function (e) {
+        return e.type === 'file' && e.name && /\.json$/i.test(e.name);
+      })
+      .map(function (e) {
+        return e.name;
+      });
+  }
+
+  async function loadBlogFilenames() {
+    var entries = await listRepoFolder('docs/_data/blog');
+    if (!Array.isArray(entries) || !entries.length) return [];
+    return entries
+      .filter(function (e) {
+        return e.type === 'file' && e.name && /\.md$/i.test(e.name);
+      })
+      .map(function (e) {
+        return e.name;
+      });
+  }
+
+  async function loadResources() {
+    var names = await loadResourceFilesList();
+    if (!names.length) return [];
+    var resources = [];
+    for (var i = 0; i < names.length; i++) {
+      var path = '/_data/resources/' + encodeURIComponent(names[i]);
+      var json = await fetchJson(path);
+      if (json && typeof json === 'object') resources.push(json);
+    }
+    return resources;
+  }
+
+  async function loadBlogPostsParsed() {
+    var names = await loadBlogFilenames();
+    if (!names.length) return [];
+    var posts = [];
+    for (var i = 0; i < names.length; i++) {
+      var name = names[i];
+      var slug = name.replace(/\.md$/i, '');
+      var path = '/_data/blog/' + encodeURIComponent(name);
+      var text = await fetchText(path);
+      if (!text) continue;
+      var parsed = parseFrontmatterMarkdown(text);
+      var post = parseBlogMeta(parsed.meta, slug);
+      if (post) posts.push(post);
+    }
+    return sortPostsDesc(posts);
+  }
+
+  function loadHomepage() {
+    fetchJson('/_data/homepage.json').then(function (data) {
+      if (!data) return;
+      applyDataCmsFields(document, data);
+      var feat = document.getElementById('featured-resources-container');
+      if (feat) {
+        loadResources().then(function (resources) {
+          if (!resources.length) return;
+          var featured = resources.filter(function (r) {
+            return normalizeResource(r).featured;
+          });
+          if (!featured.length) featured = resources;
+          var html = featured.map(function (r) {
+            return buildProductCard(r, { includeTags: true });
+          }).join('');
+          if (html) feat.innerHTML = html;
+        });
+      }
+
+      var blogEl = document.getElementById('blog-posts-container');
+      if (blogEl) {
+        loadBlogPostsParsed().then(function (posts) {
+          if (!posts.length) return;
+          var top = posts.slice(0, 3);
+          var html = top.map(blogMiniHtml).join('');
+          if (html) blogEl.innerHTML = html;
+        });
+      }
+    });
+  }
+
+  function loadAbout() {
+    fetchJson('/_data/about.json').then(function (data) {
+      if (!data) return;
+      applyDataCmsFields(document, data);
+      var y = document.querySelector('[data-cms="years_experience"]');
+      if (y) {
+        if (data.years_experience && String(data.years_experience).trim() !== '') {
+          y.classList.remove('hidden');
+        } else {
+          y.classList.add('hidden');
+        }
+      }
+    });
+  }
+
+  function loadContact() {
+    fetchJson('/_data/contact.json').then(function (data) {
+      if (!data) return;
+      applyDataCmsFields(document, data);
+      hideEmptySocial(document, data, ['instagram', 'facebook', 'pinterest']);
+    });
+  }
+
+  async function loadResourcesShopGrid() {
+    var grid = document.getElementById('shop-resources-container');
+    if (!grid) return;
+    var resources = await loadResources();
+    if (!resources.length) return;
+    var html = resources
+      .map(function (r) {
+        return buildProductCard(r, { includeTags: true });
+      })
+      .join('');
+    if (html) {
+      grid.innerHTML = html;
+      document.dispatchEvent(new CustomEvent('cms:shop-ready'));
+    }
+  }
+
+  window.loadHomepage = loadHomepage;
+  window.loadAbout = loadAbout;
+  window.loadContact = loadContact;
+  window.loadResources = loadResources;
+
+  window.loadBlogPosts = function () {
+    return loadBlogPostsParsed();
+  };
+
+  window.loadResourcesShopGrid = loadResourcesShopGrid;
+
+  document.addEventListener('DOMContentLoaded', function () {
+    var path = window.location.pathname.replace(/\/+$/, '') || '/';
+    var base = path.split('/').pop() || '';
+
+    if (base === '' || base === 'index.html') loadHomepage();
+    else if (base === 'about.html') loadAbout();
+    else if (base === 'contact.html') loadContact();
+    else if (base === 'shop.html') loadResourcesShopGrid();
+    else if (base === 'blog.html') {
+      window.loadBlogPosts().then(function (posts) {
+        var container = document.getElementById('blog-listing-container');
+        if (!container || !posts.length) return;
+        var html = posts.map(blogRowHtml).join('');
+        if (html) container.innerHTML = html;
+      });
+    }
+  });
+})();
