@@ -1,0 +1,42 @@
+# Keeps docs/_data/blog/manifest.json in sync when CMS adds .md posts.
+# The static site uses this file when the GitHub API is blocked (ad blockers, rate limits).
+name: Update blog manifest
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/_data/blog/**'
+    paths-ignore:
+      - 'docs/_data/blog/manifest.json'
+
+permissions:
+  contents: write
+
+jobs:
+  manifest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Regenerate manifest.json
+        run: |
+          python3 << 'PY'
+          import json, glob, os
+          d = "docs/_data/blog"
+          files = sorted(os.path.basename(p) for p in glob.glob(os.path.join(d, "*.md")))
+          out = os.path.join(d, "manifest.json")
+          with open(out, "w", encoding="utf-8") as f:
+              json.dump({"files": files}, f, indent=2)
+              f.write("\n")
+          PY
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/_data/blog/manifest.json
+          if git diff --staged --quiet; then
+            echo "No manifest changes."
+          else
+            git commit -m "chore: update blog manifest"
+            git push
+          fi

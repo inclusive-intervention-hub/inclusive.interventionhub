@@ -5,6 +5,9 @@
  * GitHub API (below) is only used to list filenames under docs/_data/resources and docs/_data/blog,
  * because GitHub Pages does not serve directory indexes. If you fork this repo or rename it,
  * keep these in sync with docs/admin/config.yml → backend.repo and backend.branch.
+ *
+ * Blog posts also read docs/_data/blog/manifest.json (updated by CI when you push new .md files)
+ * so listings still work if api.github.com is blocked (ad blockers, strict networks).
  */
 
 (function () {
@@ -81,7 +84,12 @@
       pathSeg +
       '?ref=' +
       encodeURIComponent(GITHUB_BRANCH);
-    return fetch(url)
+    return fetch(url, {
+      headers: {
+        Accept: 'application/vnd.github+json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+    })
       .then(function (res) {
         if (!res.ok) return Promise.reject(new Error('github list failed'));
         return res.json();
@@ -207,6 +215,7 @@
   function parseFrontmatterMarkdown(text) {
     var result = { meta: {}, body: text || '', raw: text || '' };
     if (!text || typeof text !== 'string') return result;
+    text = text.replace(/^\uFEFF/, '');
     var m = text.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/);
     if (!m) {
       result.body = text;
@@ -229,7 +238,8 @@
 
   function parseBlogMeta(meta, slug) {
     var published = meta.published;
-    if (published === 'false' || published === false) return null;
+    var pubStr = published != null ? String(published).toLowerCase().trim() : '';
+    if (published === false || pubStr === 'false' || pubStr === 'no' || pubStr === '0') return null;
     var title = meta.title || slug;
     var dateRaw = meta.date || '';
     var t = Date.parse(dateRaw);
@@ -345,7 +355,7 @@
       });
   }
 
-  async function loadBlogFilenames() {
+  async function loadBlogFilenamesFromGithub() {
     var entries = await listRepoFolder('docs/_data/blog');
     if (!Array.isArray(entries) || !entries.length) return [];
     return entries
@@ -355,6 +365,36 @@
       .map(function (e) {
         return e.name;
       });
+  }
+
+  async function loadBlogFilenamesFromManifest() {
+    var data = await fetchJson('/_data/blog/manifest.json');
+    if (!data || !Array.isArray(data.files)) return [];
+    return data.files
+      .map(function (name) {
+        return String(name || '')
+          .replace(/^.*[/\\]/, '')
+          .trim();
+      })
+      .filter(function (name) {
+        return name && /\.md$/i.test(name);
+      });
+  }
+
+  async function loadBlogFilenames() {
+    var gh = await loadBlogFilenamesFromGithub();
+    var man = await loadBlogFilenamesFromManifest();
+    var seen = {};
+    var out = [];
+    function add(n) {
+      if (!n || seen[n]) return;
+      seen[n] = true;
+      out.push(n);
+    }
+    gh.forEach(add);
+    man.forEach(add);
+    out.sort();
+    return out;
   }
 
   async function loadResources() {
@@ -388,8 +428,7 @@
 
   function loadHomepage() {
     fetchJson('/_data/homepage.json').then(function (data) {
-      if (!data) return;
-      applyDataCmsFields(document, data);
+      if (data) applyDataCmsFields(document, data);
       var feat = document.getElementById('featured-resources-container');
       if (feat) {
         loadResources().then(function (resources) {
@@ -469,13 +508,13 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     var path = window.location.pathname.replace(/\/+$/, '') || '/';
-    var base = path.split('/').pop() || '';
+    var base = (path.split('/').pop() || '').toLowerCase();
 
-    if (base === '' || base === 'index.html') loadHomepage();
+    if (!base || base === 'index.html') loadHomepage();
     else if (base === 'about.html') loadAbout();
     else if (base === 'contact.html') loadContact();
     else if (base === 'shop.html') loadResourcesShopGrid();
-    else if (base === 'blog.html') {
+    else if (base === 'blog.html' || base === 'blog') {
       window.loadBlogPosts().then(function (posts) {
         var container = document.getElementById('blog-listing-container');
         if (!container || !posts.length) return;
