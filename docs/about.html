@@ -55,29 +55,42 @@
 
       <!-- Main about card -->
       <div class="about-card">
+        <img
+          data-cms-src="photo"
+          src="./photos/favicon.svg"
+          alt=""
+          class="hidden"
+          width="140"
+          height="140"
+          loading="lazy"
+          style="border-radius:var(--radius);object-fit:cover;margin-bottom:18px;"
+        />
         <div class="about-card__header">
           <div class="about-card__logo-icon">
             <svg width="28" height="28" viewBox="0 0 28 28" fill="none"><rect x="3" y="3" width="22" height="22" rx="5" stroke="currentColor" stroke-width="1.5"/><path d="M9 14h10M14 9v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
           </div>
           <div>
-            <h2>Inclusive Materials</h2>
-            <span>Special Education Resources</span>
+            <h2 data-cms="name">Inclusive Materials</h2>
+            <span data-cms="role">Special Education Resources</span>
           </div>
         </div>
-        <p>
+        <p data-cms="years_experience" class="hidden" style="font-size:0.88rem;color:var(--text-muted);margin-bottom:12px;"></p>
+        <p data-cms="bio_short">
           At Inclusive Materials, we specialize in creating evidence-informed educational resources
           designed to support diverse learners and the professionals who work with them.
         </p>
-        <p>
-          We understand firsthand how the right tools can transform a student's learning experience.
-          That's why we develop practical, accessible materials — from IEP templates and behavior
-          intervention plans to activity packs and visual supports — designed specifically for Special
-          Education specialists, OTs, SLPs, and educators working in inclusive settings.
-        </p>
-        <p>
-          Our mission is simple: to provide high-quality, ready-to-use resources that help educators
-          do what they do best — support every learner in reaching their full potential.
-        </p>
+        <div data-cms="bio_full">
+          <p>
+            We understand firsthand how the right tools can transform a student's learning experience.
+            That's why we develop practical, accessible materials — from IEP templates and behavior
+            intervention plans to activity packs and visual supports — designed specifically for Special
+            Education specialists, OTs, SLPs, and educators working in inclusive settings.
+          </p>
+          <p>
+            Our mission is simple: to provide high-quality, ready-to-use resources that help educators
+            do what they do best — support every learner in reaching their full potential.
+          </p>
+        </div>
       </div>
 
       <!-- Right column info cards -->
@@ -168,6 +181,8 @@
   </div>
 </footer>
 
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="./cms-loader.js"></script>
 <script src="./main.js"></script>
 </body>
 </html>

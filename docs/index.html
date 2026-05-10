@@ -50,11 +50,11 @@
   <div class="hero__content">
     <span class="hero__badge">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#3DB08A" stroke-width="1.5"/><path d="M4 7l2 2 4-4" stroke="#3DB08A" stroke-width="1.5" stroke-linecap="round"/></svg>
-      For OT, SLP, SPED &amp; General Education
+      <span data-cms="hero_tagline">For OT, SLP, SPED &amp; General Education</span>
     </span>
-    <h1 class="hero__title">Inclusive<br/><span>Materials</span></h1>
-    <p class="hero__subtitle">Evidence-informed tools. Quality resources. Real results.</p>
-    <p class="hero__body">
+    <h1 class="hero__title"><span data-cms="hero_title">Inclusive<br/><span>Materials</span></span></h1>
+    <p class="hero__subtitle" data-cms="hero_subtitle">Evidence-informed tools. Quality resources. Real results.</p>
+    <p class="hero__body" data-cms="hero_description">
       I'm a Special Education teacher creating practical, research-backed resources for educators and therapists.
       From visual supports and behavior intervention plans to fine motor worksheets and adapted assessments,
       everything here is designed to help every learner thrive.
@@ -94,8 +94,8 @@
 <!-- ═══════════════════════════════════════════ WHAT I CREATE -->
 <section class="what-i-create">
   <div class="what-i-create__header container">
-    <h2>What I Create</h2>
-    <p>Practical resources born from real classroom experience, designed for the professionals who use them every day.</p>
+    <h2 data-cms="what_i_create_title">What I Create</h2>
+    <p data-cms="what_i_create_description">Practical resources born from real classroom experience, designed for the professionals who use them every day.</p>
   </div>
   <div class="what-i-create__grid">
     <div class="wic-card">
@@ -135,7 +135,7 @@
       </div>
       <a href="./shop.html" class="view-all">View all →</a>
     </div>
-    <div class="products-grid">
+    <div class="products-grid" id="featured-resources-container">
 
       <!-- Product 1 -->
       <div class="product-card">
@@ -213,7 +213,7 @@
       </div>
       <a href="./blog.html" class="view-all">View all →</a>
     </div>
-    <div class="articles-grid">
+    <div class="articles-grid" id="blog-posts-container">
 
       <div class="article-mini">
         <div class="article-mini__img">
@@ -300,6 +300,7 @@
   </div>
 </footer>
 
+<script src="./cms-loader.js"></script>
 <script src="./main.js"></script>
 </body>
 </html>

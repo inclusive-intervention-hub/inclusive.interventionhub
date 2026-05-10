@@ -50,7 +50,8 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 
   /* ── Shop Filters ───────────────────────────────────────── */
-  const productsGrid = document.getElementById('productsGrid');
+  const productsGrid =
+    document.getElementById('shop-resources-container') || document.getElementById('productsGrid');
   const emptyState = document.getElementById('emptyState');
   const searchInput = document.getElementById('shopSearch');
 
@@ -95,8 +96,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const cardCategory = (card.dataset.category || '').toLowerCase();
         const cardTitle = (card.dataset.title || '').toLowerCase();
 
-        const audienceMatch = activeAudience === 'all' || cardAudience.includes(activeAudience);
-        const categoryMatch = activeCategory === 'all' || cardCategory === activeCategory;
+        const audienceMatch =
+          activeAudience === 'all' ||
+          cardAudience === 'all' ||
+          cardAudience.split(/\s+/).filter(Boolean).includes(activeAudience);
+        const categoryMatch =
+          activeCategory === 'all' || cardCategory === 'all' || cardCategory === activeCategory;
         const searchMatch = searchQuery === '' || cardTitle.includes(searchQuery);
 
         if (audienceMatch && categoryMatch && searchMatch) {
@@ -113,13 +118,21 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     }
 
-    // Handle URL param for pre-filtering (e.g. shop.html?cat=sped)
-    const params = new URLSearchParams(window.location.search);
-    const catParam = params.get('cat');
-    if (catParam) {
-      const matchPill = document.querySelector(`.filter-pill[data-filter="audience"][data-value="${catParam}"]`);
-      if (matchPill) matchPill.click();
+    function applyShopUrlAudienceParam() {
+      const params = new URLSearchParams(window.location.search);
+      const catParam = params.get('cat');
+      if (catParam) {
+        const matchPill = document.querySelector(`.filter-pill[data-filter="audience"][data-value="${catParam}"]`);
+        if (matchPill) matchPill.click();
+      }
     }
+
+    applyShopUrlAudienceParam();
+
+    document.addEventListener('cms:shop-ready', () => {
+      applyShopUrlAudienceParam();
+      applyFilters();
+    });
   }
 
   /* ── Contact Form ───────────────────────────────────────── */
