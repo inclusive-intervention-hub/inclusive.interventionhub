@@ -81,8 +81,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
 
 .navbar__logo-img {
   flex-shrink: 0;
-  width: 48px;
-  height: 48px;
+  width: 28px;
+  height: 28px;
   object-fit: cover;
   border-radius: 7px;
 }
