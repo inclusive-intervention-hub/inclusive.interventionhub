@@ -2,7 +2,7 @@
    Inclusive Materials — style.css
    ============================================================ */
 
-@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import @import url('https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap');
 
 /* ── Reset & Base ─────────────────────────────────────────── */
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,7 +24,7 @@
   --shadow:      0 2px 12px rgba(0,0,0,0.07);
   --shadow-md:   0 4px 24px rgba(0,0,0,0.10);
   --transition:  0.2s ease;
-  --font-display: 'Playfair Display', Georgia, serif;
+  --font-display: 'Lato', sans-serif;
   --font-body:    'DM Sans', system-ui, sans-serif;
 }
 
@@ -81,8 +81,8 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
 
 .navbar__logo-img {
   flex-shrink: 0;
-  width: 28px;
-  height: 28px;
+  width: 48px;
+  height: 48px;
   object-fit: cover;
   border-radius: 7px;
 }
