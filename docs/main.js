@@ -139,42 +139,51 @@ document.addEventListener('DOMContentLoaded', () => {
   const contactForm = document.getElementById('contactForm');
   const formSuccess = document.getElementById('formSuccess');
 
-  if (contactForm) {
-    contactForm.addEventListener('submit', (e) => {
-      e.preventDefault();
+if (contactForm) {
+  contactForm.addEventListener('submit', (e) => {
+    e.preventDefault();
 
-      const name = contactForm.querySelector('#name').value.trim();
-      const email = contactForm.querySelector('#email').value.trim();
-      const message = contactForm.querySelector('#message').value.trim();
+    const name = contactForm.querySelector('#name').value.trim();
+    const email = contactForm.querySelector('#email').value.trim();
+    const subject = contactForm.querySelector('#subject').value.trim();
+    const message = contactForm.querySelector('#message').value.trim();
 
-      if (!name || !email || !message) {
-        // Simple validation highlight
-        [contactForm.querySelector('#name'), contactForm.querySelector('#email'), contactForm.querySelector('#message')]
-          .forEach(field => {
-            if (!field.value.trim()) {
-              field.style.borderColor = '#e05a5a';
-              field.addEventListener('input', () => { field.style.borderColor = ''; }, { once: true });
-            }
-          });
-        return;
-      }
+    if (!name || !email || !message) {
+      [contactForm.querySelector('#name'), contactForm.querySelector('#email'), contactForm.querySelector('#message')]
+        .forEach(field => {
+          if (!field.value.trim()) {
+            field.style.borderColor = '#e05a5a';
+            field.addEventListener('input', () => { field.style.borderColor = ''; }, { once: true });
+          }
+        });
+      return;
+    }
 
-      // Simulate sending (replace with your real form handler / Formspree endpoint)
-      const submitBtn = contactForm.querySelector('[type="submit"]');
-      submitBtn.textContent = 'Sending…';
-      submitBtn.disabled = true;
+    const submitBtn = contactForm.querySelector('[type="submit"]');
+    submitBtn.textContent = 'Sending…';
+    submitBtn.disabled = true;
 
-      setTimeout(() => {
-        contactForm.reset();
-        submitBtn.textContent = 'Send Message';
-        submitBtn.innerHTML = 'Send Message <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
-        submitBtn.disabled = false;
-        if (formSuccess) formSuccess.classList.remove('hidden');
+    fetch('https://hook.us2.make.com/dygxlzskmsj5k9qm9rdip5bis2a8ckj6', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, subject, message })
+    })
+    .then(() => {
+      contactForm.reset();
+      submitBtn.textContent = 'Send Message';
+      submitBtn.disabled = false;
+      if (formSuccess) {
+        formSuccess.classList.remove('hidden');
         setTimeout(() => formSuccess?.classList.add('hidden'), 5000);
-      }, 900);
+      }
+    })
+    .catch(() => {
+      submitBtn.textContent = 'Send Message';
+      submitBtn.disabled = false;
+      alert('Something went wrong. Please try again.');
     });
-  }
-
+  });
+}
   /* ── Cookie consent banner (essential cookies notice) ─────── */
   try {
     const COOKIE_KEY = 'im_cookie_consent_v1';
