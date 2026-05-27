@@ -7,6 +7,188 @@
   <meta name="description" content="Printable resources, activity packs, and tools you can download and use right away." />
   <link rel="stylesheet" href="./style.css" />
   <link rel="icon" type="image/jpeg" href="./photos/favicon.jpg" />
+  <style>
+/* ══════════════════════════════════════════
+   SHOP LAYOUT — sidebar + main
+   ══════════════════════════════════════════ */
+.shop-layout {
+  display: flex;
+  align-items: flex-start;
+  max-width: 1260px;
+  margin: 0 auto;
+  padding: 0 16px 60px;
+  gap: 28px;
+}
+
+/* ── Sidebar ──────────────────────────── */
+.shop-sidebar {
+  width: 224px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 80px;
+  max-height: calc(100vh - 100px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: #c8d8c8 transparent;
+}
+.shop-sidebar::-webkit-scrollbar { width: 4px; }
+.shop-sidebar::-webkit-scrollbar-thumb { background: #c8d8c8; border-radius: 4px; }
+
+.sidebar-inner {
+  background: #fff;
+  border: 1px solid #e0ede7;
+  border-radius: 12px;
+  padding: 16px 0 12px;
+}
+
+.sidebar-heading {
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #90a89a;
+  padding: 0 16px 10px;
+  margin: 0;
+}
+
+/* ── Specialty buttons ────────────────── */
+.sidebar-specialty { border-top: 1px solid #eef4f0; }
+.sidebar-specialty:first-of-type { border-top: none; }
+
+.sidebar-specialty-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: none;
+  border: none;
+  padding: 10px 16px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #1C4A30;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.15s;
+}
+.sidebar-specialty-btn:hover { background: #f0f7f3; }
+.sidebar-specialty-btn.open  { background: #f0f7f3; }
+
+.specialty-dot {
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-ot      { background: #2196F3; }
+.dot-speech  { background: #4CAF50; }
+.dot-sped    { background: #FF9800; }
+.dot-general { background: #9C27B0; }
+
+.sidebar-chevron {
+  margin-left: auto;
+  transition: transform 0.2s ease;
+  color: #90a89a;
+  flex-shrink: 0;
+}
+.sidebar-specialty-btn.open .sidebar-chevron { transform: rotate(180deg); }
+
+/* ── Domain list ─────────────────────── */
+.sidebar-domains { display: none; padding: 0 0 6px; }
+.sidebar-domains.open { display: block; }
+
+/* ── Domain buttons ───────────────────── */
+.sidebar-domain-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  background: none;
+  border: none;
+  padding: 7px 16px 7px 30px;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #2e5c42;
+  cursor: pointer;
+  text-align: left;
+  gap: 6px;
+  transition: background 0.12s;
+}
+.sidebar-domain-btn:hover { background: #f5fbf7; }
+.sidebar-domain-btn.open  { color: #1C4A30; }
+
+.domain-chevron {
+  margin-left: auto;
+  flex-shrink: 0;
+  color: #b0c8b8;
+  transition: transform 0.18s ease;
+}
+.sidebar-domain-btn.open .domain-chevron { transform: rotate(180deg); }
+
+/* ── Sub-area list ────────────────────── */
+.sidebar-subareas {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 4px 0;
+  display: none;
+}
+.sidebar-subareas.open { display: block; }
+
+.sidebar-subareas li a {
+  display: block;
+  padding: 5px 16px 5px 42px;
+  font-size: 0.74rem;
+  color: #546E7A;
+  text-decoration: none;
+  transition: color 0.12s, background 0.12s;
+}
+.sidebar-subareas li a:hover,
+.sidebar-subareas li a.active {
+  color: #1C4A30;
+  background: #e8f5ee;
+}
+.sidebar-subareas li a.active { font-weight: 600; }
+
+/* ── Main content area ────────────────── */
+.shop-main { flex: 1; min-width: 0; }
+
+/* Active filter strip */
+.sidebar-active-filter {
+  display: none;
+  align-items: center;
+  gap: 8px;
+  background: #e8f5ee;
+  border: 1px solid #c3e6d0;
+  border-radius: 8px;
+  padding: 8px 14px;
+  margin-bottom: 16px;
+  font-size: 0.8rem;
+  color: #1C4A30;
+  font-weight: 600;
+}
+.sidebar-active-filter.visible { display: flex; }
+.sidebar-active-filter span { font-weight: 400; color: #2e5c42; }
+.sidebar-active-filter button {
+  margin-left: auto;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #546E7A;
+  font-size: 1.1rem;
+  line-height: 1;
+  padding: 0 2px;
+}
+.sidebar-active-filter button:hover { color: #1C4A30; }
+
+/* Override products grid inside shop-main */
+.shop-main .products-grid {
+  max-width: 100% !important;
+  padding: 20px 0 !important;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .shop-layout { flex-direction: column; padding: 0 12px 40px; }
+  .shop-sidebar { width: 100%; position: static; max-height: none; }
+}
+  </style>
 </head>
 <body>
 
@@ -48,10 +230,9 @@
   <p>Printable resources, activity packs, and tools you can download and use right away.</p>
 </div>
 
-<!-- ═══════════════════════════════════════════ FILTERS -->
+<!-- ═══════════════════════════════════════════ FILTERS (top pills + search) -->
 <div class="shop-filters">
   <div class="container">
-    <!-- Audience filter -->
     <div class="filter-row">
       <span class="filter-label">Audience:</span>
       <button class="filter-pill active" data-filter="audience" data-value="all">All</button>
@@ -59,198 +240,541 @@
       <button class="filter-pill" data-filter="audience" data-value="ot">OT</button>
       <button class="filter-pill" data-filter="audience" data-value="speech">Speech &amp; Language</button>
       <button class="filter-pill" data-filter="audience" data-value="general">General Classroom</button>
-<div class="shop-search" style="margin-left:auto;">
+      <div class="shop-search" style="margin-left:auto;">
         <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3 3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         <input type="text" id="shopSearch" placeholder="Search products…" />
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════ SHOP LAYOUT -->
+<div class="shop-layout">
+
+  <!-- ── LEFT SIDEBAR ── -->
+  <aside class="shop-sidebar" id="shopSidebar" aria-label="Browse by category">
+    <div class="sidebar-inner">
+      <p class="sidebar-heading">Browse by Category</p>
+
+      <!-- OT -->
+      <div class="sidebar-specialty">
+        <button class="sidebar-specialty-btn" data-specialty="ot" aria-expanded="false">
+          <span class="specialty-dot dot-ot"></span>
+          OT
+          <svg class="sidebar-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="sidebar-domains" id="domains-ot">
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Fine Motor Skills <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="hand strengthening">Hand Strengthening</a></li>
+              <li><a href="#" data-audience="ot" data-tag="scissor">Scissor Skills</a></li>
+              <li><a href="#" data-audience="ot" data-tag="pencil grasp">Pencil Grasp &amp; Control</a></li>
+              <li><a href="#" data-audience="ot" data-tag="in-hand manipulation">In-Hand Manipulation</a></li>
+              <li><a href="#" data-audience="ot" data-tag="bilateral coordination">Bilateral Coordination</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Gross Motor Skills <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="core strength">Core Strength &amp; Stability</a></li>
+              <li><a href="#" data-audience="ot" data-tag="balance">Balance &amp; Coordination</a></li>
+              <li><a href="#" data-audience="ot" data-tag="proprioception">Body Awareness (Proprioception)</a></li>
+              <li><a href="#" data-audience="ot" data-tag="motor planning">Motor Planning</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Sensory Processing <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="sensory awareness">Sensory Awareness</a></li>
+              <li><a href="#" data-audience="ot" data-tag="tactile">Tactile Discrimination</a></li>
+              <li><a href="#" data-audience="ot" data-tag="vestibular">Vestibular &amp; Movement</a></li>
+              <li><a href="#" data-audience="ot" data-tag="visual perception">Visual Perception</a></li>
+              <li><a href="#" data-audience="ot" data-tag="auditory processing">Auditory Processing</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Visual-Motor Integration <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="eye-hand">Eye-Hand Coordination</a></li>
+              <li><a href="#" data-audience="ot" data-tag="copying">Copying &amp; Reproduction</a></li>
+              <li><a href="#" data-audience="ot" data-tag="visual tracking">Visual Tracking</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Self-Care / ADL <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="dressing">Dressing Skills</a></li>
+              <li><a href="#" data-audience="ot" data-tag="hygiene">Hygiene &amp; Grooming</a></li>
+              <li><a href="#" data-audience="ot" data-tag="utensil">Eating &amp; Utensil Use</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Handwriting <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="pre-writing">Pre-Writing Skills</a></li>
+              <li><a href="#" data-audience="ot" data-tag="print letter">Print Letter Formation</a></li>
+              <li><a href="#" data-audience="ot" data-tag="cursive">Cursive Writing</a></li>
+              <li><a href="#" data-audience="ot" data-tag="spacing">Spacing &amp; Sizing</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Cognitive / Executive Function <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="attention">Attention &amp; Focus</a></li>
+              <li><a href="#" data-audience="ot" data-tag="organization">Organization &amp; Planning</a></li>
+              <li><a href="#" data-audience="ot" data-tag="problem solving">Problem Solving</a></li>
+              <li><a href="#" data-audience="ot" data-tag="memory">Working Memory</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Social-Emotional (OT) <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="emotion identification">Emotion Identification</a></li>
+              <li><a href="#" data-audience="ot" data-tag="self-regulation">Self-Regulation</a></li>
+              <li><a href="#" data-audience="ot" data-tag="social participation">Social Participation</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Oral Motor <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="oral muscle">Oral Muscle Strengthening</a></li>
+              <li><a href="#" data-audience="ot" data-tag="oral sensory">Oral Sensory Exploration</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Assistive Technology <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="ot" data-tag="aac support">AAC Support</a></li>
+              <li><a href="#" data-audience="ot" data-tag="adapted writing">Adapted Writing Tools</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div><!-- /OT -->
+
+      <!-- Speech & Language -->
+      <div class="sidebar-specialty">
+        <button class="sidebar-specialty-btn" data-specialty="speech" aria-expanded="false">
+          <span class="specialty-dot dot-speech"></span>
+          Speech &amp; Language
+          <svg class="sidebar-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="sidebar-domains" id="domains-speech">
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Articulation &amp; Phonology <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="early developing sounds">Early Developing Sounds</a></li>
+              <li><a href="#" data-audience="speech" data-tag="later developing sounds">Later Developing Sounds</a></li>
+              <li><a href="#" data-audience="speech" data-tag="phonological">Phonological Processes</a></li>
+              <li><a href="#" data-audience="speech" data-tag="minimal pair">Minimal Pair Therapy</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Language Development <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="receptive language">Receptive Language</a></li>
+              <li><a href="#" data-audience="speech" data-tag="expressive language">Expressive Language</a></li>
+              <li><a href="#" data-audience="speech" data-tag="vocabulary">Vocabulary Building</a></li>
+              <li><a href="#" data-audience="speech" data-tag="sentence structure">Sentence Structure</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Fluency <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="stuttering">Stuttering Support</a></li>
+              <li><a href="#" data-audience="speech" data-tag="smooth speech">Smooth Speech Strategies</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Social Communication <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="pragmatic">Pragmatic Skills</a></li>
+              <li><a href="#" data-audience="speech" data-tag="conversation">Conversation Skills</a></li>
+              <li><a href="#" data-audience="speech" data-tag="perspective taking">Perspective Taking</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">AAC <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="core vocabulary">Core Vocabulary</a></li>
+              <li><a href="#" data-audience="speech" data-tag="symbol-based">Symbol-Based Communication</a></li>
+              <li><a href="#" data-audience="speech" data-tag="low-tech aac">Low-Tech AAC</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Literacy &amp; Phonological Awareness <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="phonemic awareness">Phonemic Awareness</a></li>
+              <li><a href="#" data-audience="speech" data-tag="phonics">Phonics</a></li>
+              <li><a href="#" data-audience="speech" data-tag="reading fluency">Reading Fluency</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Feeding &amp; Oral Motor <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="speech" data-tag="oral phase">Oral Phase</a></li>
+              <li><a href="#" data-audience="speech" data-tag="sensory feeding">Sensory Feeding</a></li>
+              <li><a href="#" data-audience="speech" data-tag="texture">Texture Progression</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div><!-- /Speech -->
+
+      <!-- SPED -->
+      <div class="sidebar-specialty">
+        <button class="sidebar-specialty-btn" data-specialty="sped" aria-expanded="false">
+          <span class="specialty-dot dot-sped"></span>
+          SPED
+          <svg class="sidebar-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="sidebar-domains" id="domains-sped">
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Early Intervention (Ages 0–5) <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="developmental milestones">Developmental Milestones</a></li>
+              <li><a href="#" data-audience="sped" data-tag="early cognitive">Early Cognitive Skills</a></li>
+              <li><a href="#" data-audience="sped" data-tag="sensory play">Sensory Play</a></li>
+              <li><a href="#" data-audience="sped" data-tag="pre-academic">Pre-Academic Skills</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Behavior &amp; Self-Regulation <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="zones of regulation">Zones of Regulation</a></li>
+              <li><a href="#" data-audience="sped" data-tag="positive behavior">Positive Behavior Supports</a></li>
+              <li><a href="#" data-audience="sped" data-tag="emotional regulation">Emotional Regulation</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Academic Support <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="reading modifications">Reading Modifications</a></li>
+              <li><a href="#" data-audience="sped" data-tag="math modifications">Math Modifications</a></li>
+              <li><a href="#" data-audience="sped" data-tag="written expression">Written Expression Support</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Life Skills <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="daily living">Daily Living Skills</a></li>
+              <li><a href="#" data-audience="sped" data-tag="community skills">Community Skills</a></li>
+              <li><a href="#" data-audience="sped" data-tag="vocational">Vocational Readiness</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Social Skills <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="peer interaction">Peer Interaction</a></li>
+              <li><a href="#" data-audience="sped" data-tag="group participation">Group Participation</a></li>
+              <li><a href="#" data-audience="sped" data-tag="conflict resolution">Conflict Resolution</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Transition Planning <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="iep goal">IEP Goal Writing</a></li>
+              <li><a href="#" data-audience="sped" data-tag="transition to kindergarten">Transition to Kindergarten</a></li>
+              <li><a href="#" data-audience="sped" data-tag="post-secondary">Post-Secondary Planning</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Disability Awareness <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="sped" data-tag="inclusive classroom">Inclusive Classroom Tools</a></li>
+              <li><a href="#" data-audience="sped" data-tag="disability education">Disability Education</a></li>
+              <li><a href="#" data-audience="sped" data-tag="parent resources">Parent Resources</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div><!-- /SPED -->
+
+      <!-- General Classroom -->
+      <div class="sidebar-specialty">
+        <button class="sidebar-specialty-btn" data-specialty="general" aria-expanded="false">
+          <span class="specialty-dot dot-general"></span>
+          General Classroom
+          <svg class="sidebar-chevron" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l3.5 3.5 3.5-3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="sidebar-domains" id="domains-general">
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Toddler (Ages 2–3) <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="colors shapes">Colors &amp; Shapes</a></li>
+              <li><a href="#" data-audience="general" data-tag="basic concepts">Basic Concepts</a></li>
+              <li><a href="#" data-audience="general" data-tag="early literacy">Early Literacy</a></li>
+              <li><a href="#" data-audience="general" data-tag="sensory play">Sensory Play</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Preschool / PreK (Ages 3–5) <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="pre-writing">Pre-Writing</a></li>
+              <li><a href="#" data-audience="general" data-tag="number sense">Number Sense</a></li>
+              <li><a href="#" data-audience="general" data-tag="print awareness">Print Awareness</a></li>
+              <li><a href="#" data-audience="general" data-tag="social skills">Social Skills</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Kindergarten <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="letter recognition">Letter Recognition</a></li>
+              <li><a href="#" data-audience="general" data-tag="phonics">Phonics</a></li>
+              <li><a href="#" data-audience="general" data-tag="counting">Counting &amp; Cardinality</a></li>
+              <li><a href="#" data-audience="general" data-tag="sight words">Sight Words</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Grade 1 <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="reading comprehension">Reading Comprehension</a></li>
+              <li><a href="#" data-audience="general" data-tag="addition subtraction">Addition &amp; Subtraction</a></li>
+              <li><a href="#" data-audience="general" data-tag="writing sentences">Writing Sentences</a></li>
+              <li><a href="#" data-audience="general" data-tag="science basics">Science Basics</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Grade 2 <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="fluency decoding">Fluency &amp; Decoding</a></li>
+              <li><a href="#" data-audience="general" data-tag="place value">Place Value</a></li>
+              <li><a href="#" data-audience="general" data-tag="paragraph writing">Paragraph Writing</a></li>
+              <li><a href="#" data-audience="general" data-tag="social studies">Social Studies</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Grade 3 <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="reading strategies">Reading Strategies</a></li>
+              <li><a href="#" data-audience="general" data-tag="multiplication">Multiplication</a></li>
+              <li><a href="#" data-audience="general" data-tag="narrative writing">Narrative Writing</a></li>
+              <li><a href="#" data-audience="general" data-tag="research skills">Research Skills</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Grade 4–5 <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="informational text">Informational Text</a></li>
+              <li><a href="#" data-audience="general" data-tag="fractions decimals">Fractions &amp; Decimals</a></li>
+              <li><a href="#" data-audience="general" data-tag="essay writing">Essay Writing</a></li>
+              <li><a href="#" data-audience="general" data-tag="stem">STEM Projects</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Grade 6–8 (Middle School) <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="literature analysis">Literature Analysis</a></li>
+              <li><a href="#" data-audience="general" data-tag="algebra">Pre-Algebra &amp; Algebra</a></li>
+              <li><a href="#" data-audience="general" data-tag="argumentative writing">Argumentative Writing</a></li>
+              <li><a href="#" data-audience="general" data-tag="critical thinking">Critical Thinking</a></li>
+            </ul>
+          </div>
+
+          <div class="sidebar-domain-item">
+            <button class="sidebar-domain-btn" aria-expanded="false">Grade 9–12 (High School) <svg class="domain-chevron" width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 3.5l3 3 3-3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            <ul class="sidebar-subareas">
+              <li><a href="#" data-audience="general" data-tag="college prep">College Prep Literacy</a></li>
+              <li><a href="#" data-audience="general" data-tag="advanced math">Advanced Math Concepts</a></li>
+              <li><a href="#" data-audience="general" data-tag="research citation">Research &amp; Citation</a></li>
+              <li><a href="#" data-audience="general" data-tag="career readiness">Career Readiness</a></li>
+            </ul>
+          </div>
+
+        </div>
+      </div><!-- /General -->
+
+    </div>
+  </aside>
+
+  <!-- ── MAIN CONTENT ── -->
+  <div class="shop-main">
+
+    <!-- Active filter breadcrumb -->
+    <div class="sidebar-active-filter" id="sidebarActiveFilter">
+      Showing: <span id="sidebarActiveFilterText"></span>
+      <button id="sidebarClearFilter" aria-label="Clear filter">&#x2715;</button>
+    </div>
+
+    <!-- Products grid -->
+    <section class="shop-products">
+      <div class="products-grid" id="shop-resources-container" style="display:grid; grid-template-columns:repeat(auto-fill, minmax(230px, 1fr)); gap:24px; padding:20px 0; margin:0 auto;">
+
+        <!-- Product 6 — P·B·M Minimal Pair Cards -->
+        <div class="product-card" data-audience="speech" data-tags="speech language slp articulation minimal pair cards bilabial sounds p b m toddler preschool early intervention early developing sounds phonology printable flashcards ages 2-4" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div style="position:relative;">
+            <img src="photos/pbm-minimal-pair-cards.png" alt="P B M Minimal Pair Cards" style="width:100%; height:200px; object-fit:cover; object-position:top;" />
+            <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <span style="background:#E8F5E9; color:#2E7D32; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Speech &amp; Language</span>
+              <span style="background:#E8F5E9; color:#2E7D32; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Articulation</span>
+              <span style="background:#E8F5E9; color:#2E7D32; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 1</span>
+            </div>
+            <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">P · B · M Minimal Pair Cards — Early Bilabial Sounds</h3>
+            <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">24 illustrated minimal pair cards targeting /p/, /b/, and /m/ sounds. Includes data tracking sheet and IEP goal template. Ages 2–4.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$2.00</span>
+              <a href="https://payhip.com/b/yA6wo" target="_blank" style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>
             </div>
           </div>
         </div>
 
-<!-- ═══════════════════════════════════════════ PRODUCTS -->
-<section class="shop-products">
-  <div class="container">
-<div class="products-grid" id="shop-resources-container" style="display:grid; grid-template-columns:repeat(4, 1fr); max-width:1060px; gap:24px; padding:40px 16px; margin:0 auto;">
+        <!-- Product 5 — Bundle -->
+        <div class="product-card" data-audience="ot" data-tags="bundle all levels fine motor ot occupational therapy hand strengthening ages 2-14 complete series playdough clothespin hole punch finger exercise" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div style="position:relative;">
+            <img src="photos/OT_Fine_Motor_Hand_Strengthening_Series.png" alt="OT Fine Motor Bundle" style="width:100%; height:200px; object-fit:cover; object-position:top;" />
+            <span style="position:absolute; top:10px; left:10px; background:#E53935; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">BUNDLE</span>
+            <span style="position:absolute; top:10px; right:10px; background:#F9A825; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">Save 10%</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
+              <span style="background:#FFF3E0; color:#E65100; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Bundle · All Levels</span>
+            </div>
+            <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">OT Fine Motor Hand Strengthening Bundle — Complete 4-Level Series</h3>
+            <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">All 4 levels — Playdough Mats · Clothespin Cards · Hole-Punch Worksheets · Finger Exercise Program. Ages 2–14.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <div>
+                <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$16.00</span>
+                <span style="font-size:0.8rem; color:#9E9E9E; text-decoration:line-through; margin-left:6px;">$17.90</span>
+              </div>
+              <a href="https://payhip.com/b/MgCAq" target="_blank" style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>
+            </div>
+          </div>
+        </div>
 
-<!-- Product 6 — P·B·M Minimal Pair Cards (Speech & Language) -->
-<div class="product-card" data-audience="speech" data-tags="speech language SLP articulation minimal pair cards bilabial sounds p b m toddler preschool early intervention early developing sounds phonology printable flashcards ages 2-4" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-  <div style="position:relative;">
-    <img src="photos/pbm-minimal-pair-cards.png"
-         alt="P B M Minimal Pair Cards Speech Therapy"
-         style="width:100%; height:220px; object-fit:cover; object-position:top;" />
-    <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
-  </div>
-  <div style="padding:16px;">
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-      <span style="background:#E8F5E9; color:#2E7D32; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Speech &amp; Language</span>
-      <span style="background:#E8F5E9; color:#2E7D32; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Articulation</span>
-      <span style="background:#E8F5E9; color:#2E7D32; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 1</span>
-    </div>
-    <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">P · B · M Minimal Pair Cards — Early Bilabial Sounds</h3>
-    <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">24 illustrated minimal pair cards targeting /p/, /b/, and /m/ sounds. Includes data tracking sheet and IEP goal template. Perfect for SLP sessions and home practice. Ages 2–4.</p>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$2.00</span>
-      <a href="https://payhip.com/b/yA6wo"
-         target="_blank"
-         style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
-        Buy Now ↗
-      </a>
-    </div>
-  </div>
-</div>
-  
-  <!-- Product 5 — Bundle 1-->
-<div class="product-card" data-audience="ot" data-tags="bundle all levels fine motor OT occupational therapy hand strengthening ages 2-14 complete series playdough clothespin hole punch finger exercise" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-  <div style="position:relative;">
-    <img src="photos/OT_Fine_Motor_Hand_Strengthening_Series.png"
-         alt="OT Fine Motor Hand Strengthening Bundle"
-         style="width:100%; height:220px; object-fit:cover; object-position:top;" />
-    <span style="position:absolute; top:10px; left:10px; background:#E53935; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">BUNDLE</span>
-    <span style="position:absolute; top:10px; right:10px; background:#F9A825; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">Save 10%</span>
-  </div>
-  <div style="padding:16px;">
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Fine Motor</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
-<span style="background:#FFF3E0; color:#E65100; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Bundle · All Levels</span>
-    </div>
-    <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">OT Fine Motor Hand Strengthening Bundle — Complete 4-Level Series</h3>
-    <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">All 4 levels in one download — Playdough Mats · Clothespin Cards · Hole-Punch Worksheets · Finger Exercise Program. Every stage covered from toddler to teen. Ages 2–14.</p>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <div>
-        <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$16.00</span>
-        <span style="font-size:0.8rem; color:#9E9E9E; text-decoration:line-through; margin-left:6px;">$17.90</span>
-      </div>
-      <a href="https://payhip.com/b/MgCAq"
-         target="_blank"
-         style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
-        Buy Now ↗
-      </a>
-    </div>
-  </div>
-</div>
-  
-  <!-- Product 4 — Graded Resistance Finger Exercise Program -->
-<div class="product-card" data-audience="ot" data-tags="level 4 fine motor OT occupational therapy hand strengthening upper elementary graded resistance finger exercise program theraputty ages 8-14" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-  <div style="position:relative;">
-    <img src="photos/graded-resistance-finger-exercise-program.png"
-         alt="Graded Resistance Finger Exercise Program"
-         style="width:100%; height:220px; object-fit:cover; object-position:top;" />
-    <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
-  </div>
-  <div style="padding:16px;">
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Fine Motor</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 4</span>
-    </div>
-    <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Graded Resistance Finger Exercise Program</h3>
-    <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">8-week structured hand strengthening program with exercise log, IEP goal tracker, and progressive resistance levels. Perfect for OT, SPED and home therapy. Ages 8–14.</p>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$5.00</span>
-      <a href="https://payhip.com/b/UZN2L"
-         target="_blank"
-         style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
-        Buy Now ↗
-      </a>
-    </div>
-  </div>
-</div>
-  
-  <!-- Product 3 — Hole Punch Worksheets -->
-  <div class="product-card" data-audience="ot" data-tags="level 3 fine motor OT occupational therapy hand strengthening hole punch pattern worksheets kinder grade 2 ages 5-8" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-    <div style="position:relative;">
-      <img src="photos/Hole-Punch-Pattern-Worksheets.png"
-           alt="Hole Punch Worksheets"
-           style="width:100%; height:220px; object-fit:cover; object-position:top;" />
-      <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
-    </div>
-    <div style="padding:16px;">
-      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Fine Motor</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 3</span>
-      </div>
-      <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Hole Punch Worksheets</h3>
-      <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">Printable hole punch activity worksheets for fine motor strengthening. Perfect for OT, SPED and home therapy.</p>
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$4.20</span>
-        <a href="https://payhip.com/b/tQe1q"
-           target="_blank"
-           style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
-          Buy Now ↗
-        </a>
-      </div>
-    </div>
-  </div>  
-  
-<!-- Product 2 - Clothespin Cards -->
-<div class="product-card" data-audience="ot" data-tags="level 2 fine motor OT occupational therapy hand strengthening clothespin clip match cards prek grade 1 ages 4-7" style="background:#fff; border-radius:12px; box-shadow:0 2px 12px rgba(0,0,0,0.08); overflow:hidden; max-width:320px; width:100%;">
-  <div style="position:relative;">
-    <img src="photos/clothespin-clip-match-cards.png"
-      alt="Clothespin Clip and Match Cards"
-      style="width:100%; height:220px; object-fit:cover; object-position:top;" />
-      <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
-    </div>
-  <div style="padding:16px;">
-    <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Fine Motor</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 2</span>
-    </div>
-    <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Clothespin Clip and Match Cards</h3>
-    <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">10 color clip cards and 6 animal match cards for fine motor strengthening. Perfect for OT, SPED and home therapy. Ages 2-7.</p>
-    <div style="display:flex; justify-content:space-between; align-items:center;">
-      <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$4.20</span>
-      <a href="https://payhip.com/b/HL60D"
-        target="_blank"
-        style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
-        Buy Now ↗
-      </a>
-    </div>
-  </div>
-  </div>
+        <!-- Product 4 — Graded Resistance Finger Exercise -->
+        <div class="product-card" data-audience="ot" data-tags="level 4 fine motor ot occupational therapy hand strengthening upper elementary graded resistance finger exercise program theraputty ages 8-14" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div style="position:relative;">
+            <img src="photos/graded-resistance-finger-exercise-program.png" alt="Graded Resistance Finger Exercise Program" style="width:100%; height:200px; object-fit:cover; object-position:top;" />
+            <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 4</span>
+            </div>
+            <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Graded Resistance Finger Exercise Program</h3>
+            <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">8-week structured hand strengthening program with exercise log, IEP goal tracker, and progressive resistance levels. Ages 8–14.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$5.00</span>
+              <a href="https://payhip.com/b/UZN2L" target="_blank" style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>
+            </div>
+          </div>
+        </div>
 
-  <!-- Product 1 — Playdough Mats -->
-  <div class="product-card" data-audience="ot" data-tags="level 1 fine motor OT occupational therapy hand strengthening playdough squeeze shape mats toddler preschool ages 2-5" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
-    <div style="position:relative;">
-      <img src="https://i.etsystatic.com/65987499/r/il/9eae99/8018210364/il_794xN.8018210364_njea.jpg"
-           alt="Playdough Squeeze and Shape Mats"
-           style="width:100%; height:220px; object-fit:cover; object-position:top;" />
-      <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
-    </div>
-    <div style="padding:16px;">
-      <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Fine Motor</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
-<span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 1</span>
-      </div>
-      <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Playdough Squeeze and Shape Mats</h3>
-      <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">6 printable activity mats for hand strengthening. Perfect for OT, SPED and home therapy. Ages 2-5.</p>
-      <div style="display:flex; justify-content:space-between; align-items:center;">
-        <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$4.50</span>
-        <a href="https://payhip.com/b/sybGR"
-           target="_blank"
-           style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">
-          Buy Now ↗
-        </a>
-      </div>
-    </div>
-  </div>
-    </div>
-</div>
-    <!-- Empty state -->
-    <div id="emptyState" class="hidden" style="text-align:center; padding: 80px 0; color: var(--text-muted);">
-      <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 16px;opacity:0.35"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/><path d="M16 24h16M24 16v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-      <p style="font-size:1.05rem;">No products match your filters.</p>
-    </div>
+        <!-- Product 3 — Hole Punch Worksheets -->
+        <div class="product-card" data-audience="ot" data-tags="level 3 fine motor ot occupational therapy hand strengthening hole punch pattern worksheets kinder grade 2 ages 5-8" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div style="position:relative;">
+            <img src="photos/Hole-Punch-Pattern-Worksheets.png" alt="Hole Punch Worksheets" style="width:100%; height:200px; object-fit:cover; object-position:top;" />
+            <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 3</span>
+            </div>
+            <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Hole Punch Worksheets</h3>
+            <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">Printable hole punch activity worksheets for fine motor strengthening. Perfect for OT, SPED and home therapy.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$4.20</span>
+              <a href="https://payhip.com/b/tQe1q" target="_blank" style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>
+            </div>
+          </div>
+        </div>
 
-  </div>
-</section>
+        <!-- Product 2 — Clothespin Cards -->
+        <div class="product-card" data-audience="ot" data-tags="level 2 fine motor ot occupational therapy hand strengthening clothespin clip match cards prek grade 1 ages 4-7" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div style="position:relative;">
+            <img src="photos/clothespin-clip-match-cards.png" alt="Clothespin Clip and Match Cards" style="width:100%; height:200px; object-fit:cover; object-position:top;" />
+            <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 2</span>
+            </div>
+            <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Clothespin Clip and Match Cards</h3>
+            <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">10 color clip cards and 6 animal match cards for fine motor strengthening. Ages 2–7.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$4.20</span>
+              <a href="https://payhip.com/b/HL60D" target="_blank" style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product 1 — Playdough Mats -->
+        <div class="product-card" data-audience="ot" data-tags="level 1 fine motor ot occupational therapy hand strengthening playdough squeeze shape mats toddler preschool ages 2-5" style="background:#fff; border-radius:12px; overflow:hidden; box-shadow:0 2px 12px rgba(0,0,0,0.08);">
+          <div style="position:relative;">
+            <img src="https://i.etsystatic.com/65987499/r/il/9eae99/8018210364/il_794xN.8018210364_njea.jpg" alt="Playdough Squeeze and Shape Mats" style="width:100%; height:200px; object-fit:cover; object-position:top;" />
+            <span style="position:absolute; top:10px; left:10px; background:#00897B; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 10px; border-radius:20px;">NEW</span>
+          </div>
+          <div style="padding:16px;">
+            <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:8px;">
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">OT</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Hand Strengthening</span>
+              <span style="background:#E0F2F1; color:#00695C; font-size:0.7rem; font-weight:600; padding:3px 8px; border-radius:12px;">Level 1</span>
+            </div>
+            <h3 style="font-size:1rem; font-weight:700; color:#1C4A30; margin-bottom:6px; line-height:1.4;">Playdough Squeeze and Shape Mats</h3>
+            <p style="font-size:0.85rem; color:#546E7A; margin-bottom:12px; line-height:1.5;">6 printable activity mats for hand strengthening. Ages 2–5.</p>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">$4.50</span>
+              <a href="https://payhip.com/b/sybGR" target="_blank" style="background:#1C4A30; color:#fff; padding:8px 16px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Empty state -->
+      <div id="emptyState" class="hidden" style="text-align:center; padding:80px 0; color:#90a89a;">
+        <svg width="48" height="48" viewBox="0 0 48 48" fill="none" style="margin:0 auto 16px;opacity:0.35"><circle cx="24" cy="24" r="20" stroke="currentColor" stroke-width="2"/><path d="M16 24h16M24 16v16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+        <p style="font-size:1.05rem;">No products match your filters.</p>
+      </div>
+
+    </section>
+  </div><!-- /shop-main -->
+
+</div><!-- /shop-layout -->
 
 <!-- ═══════════════════════════════════════════ FOOTER -->
 <footer class="footer">
@@ -289,5 +813,102 @@
 
 <script src="./cms-loader.js"></script>
 <script src="./main.js"></script>
+<script>
+// ══════════════════════════════════════════
+// Sidebar navigation logic
+// ══════════════════════════════════════════
+(function () {
+
+  // Toggle specialty sections
+  document.querySelectorAll('.sidebar-specialty-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var specialty = btn.getAttribute('data-specialty');
+      var domainsEl = document.getElementById('domains-' + specialty);
+      var isOpen = btn.classList.contains('open');
+      document.querySelectorAll('.sidebar-specialty-btn').forEach(function (b) { b.classList.remove('open'); b.setAttribute('aria-expanded','false'); });
+      document.querySelectorAll('.sidebar-domains').forEach(function (d) { d.classList.remove('open'); });
+      if (!isOpen) {
+        btn.classList.add('open');
+        btn.setAttribute('aria-expanded','true');
+        if (domainsEl) domainsEl.classList.add('open');
+      }
+    });
+  });
+
+  // Toggle domain sub-areas
+  document.querySelectorAll('.sidebar-domain-btn').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      var subareas = btn.nextElementSibling;
+      var isOpen = btn.classList.contains('open');
+      btn.classList.toggle('open', !isOpen);
+      btn.setAttribute('aria-expanded', String(!isOpen));
+      if (subareas) subareas.classList.toggle('open', !isOpen);
+    });
+  });
+
+  // Sub-area click → filter products
+  var activeFilter = document.getElementById('sidebarActiveFilter');
+  var activeFilterText = document.getElementById('sidebarActiveFilterText');
+  var clearFilterBtn = document.getElementById('sidebarClearFilter');
+
+  document.querySelectorAll('.sidebar-subareas a').forEach(function (link) {
+    link.addEventListener('click', function (e) {
+      e.preventDefault();
+      document.querySelectorAll('.sidebar-subareas a').forEach(function (l) { l.classList.remove('active'); });
+      link.classList.add('active');
+      var audience = link.getAttribute('data-audience');
+      var tag = (link.getAttribute('data-tag') || '').toLowerCase();
+      activeFilterText.textContent = link.textContent.trim();
+      activeFilter.classList.add('visible');
+      filterProducts(audience, tag);
+      // Sync top audience pills
+      document.querySelectorAll('.filter-pill[data-filter="audience"]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-value') === audience);
+      });
+    });
+  });
+
+  if (clearFilterBtn) {
+    clearFilterBtn.addEventListener('click', function () {
+      activeFilter.classList.remove('visible');
+      document.querySelectorAll('.sidebar-subareas a').forEach(function (l) { l.classList.remove('active'); });
+      document.querySelectorAll('.filter-pill[data-filter="audience"]').forEach(function (p) {
+        p.classList.toggle('active', p.getAttribute('data-value') === 'all');
+      });
+      filterProducts('all', '');
+    });
+  }
+
+  function filterProducts(audience, tag) {
+    var cards = document.querySelectorAll('.product-card');
+    var any = false;
+    cards.forEach(function (card) {
+      var cardAudience = (card.getAttribute('data-audience') || '').toLowerCase();
+      var cardTags = (card.getAttribute('data-tags') || '').toLowerCase();
+      var title = (card.querySelector('h3') ? card.querySelector('h3').textContent : '').toLowerCase();
+      var audienceMatch = audience === 'all' || cardAudience === audience;
+      var tagMatch = !tag || cardTags.indexOf(tag) !== -1 || title.indexOf(tag) !== -1;
+      var show = audienceMatch && tagMatch;
+      card.style.display = show ? '' : 'none';
+      if (show) any = true;
+    });
+    var emptyState = document.getElementById('emptyState');
+    if (emptyState) emptyState.classList.toggle('hidden', any);
+  }
+
+  // Also handle URL param ?cat=ot etc on load
+  var params = new URLSearchParams(window.location.search);
+  var cat = params.get('cat');
+  if (cat) {
+    var matchBtn = document.querySelector('.sidebar-specialty-btn[data-specialty="' + cat + '"]');
+    if (matchBtn) matchBtn.click();
+    filterProducts(cat, '');
+    document.querySelectorAll('.filter-pill[data-filter="audience"]').forEach(function (p) {
+      p.classList.toggle('active', p.getAttribute('data-value') === cat);
+    });
+  }
+
+})();
+</script>
 </body>
 </html>
