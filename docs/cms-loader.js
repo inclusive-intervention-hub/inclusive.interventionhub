@@ -274,7 +274,7 @@
   }
 
   function blogArticleUrl(slug) {
-    return './blog-post.html?post=' + encodeURIComponent(slug);
+    return '/blog-post/?post=' + encodeURIComponent(slug);
   }
 
   function blogRowHtml(post) {
@@ -607,10 +607,10 @@
     var base = (path.split('/').pop() || '').toLowerCase();
 
     if (!base || base === 'index.html') loadHomepage();
-    else if (base === 'about.html') loadAbout();
-    else if (base === 'contact.html') loadContact();
-    else if (base === 'shop.html') loadResourcesShopGrid();
-    else if (base === 'blog.html' || base === 'blog') {
+    else if (base === 'about' || base === 'about.html') loadAbout();
+    else if (base === 'contact' || base === 'contact.html') loadContact();
+    else if (base === 'shop' || base === 'shop.html') loadResourcesShopGrid();
+    else if (base === 'blog' || base === 'blog.html') {
       var legacyHash = window.location.hash.replace(/^#/, '');
       if (legacyHash.indexOf('post-') === 0) {
         var legacySlug = legacyHash.slice('post-'.length).trim();
