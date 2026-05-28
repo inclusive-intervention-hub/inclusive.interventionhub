@@ -228,8 +228,23 @@
 
   <!-- SALES TRACKER -->
   <div id="tab-sales" class="tab-panel">
+
+    <!-- Payhip Auto-Sync Banner -->
+    <div class="form-card" style="border-color:#bbf7d0;background:#f0fdf4;margin-bottom:1rem;">
+      <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:0.75rem;">
+        <div>
+          <p style="font-size:0.9rem;font-weight:600;color:var(--green);margin-bottom:0.2rem;">🔄 Auto-Sync from Payhip</p>
+          <p style="font-size:0.82rem;color:var(--muted);">Pulls your latest sales automatically from Google Sheets (logged by Zapier). Connect Google in the Analytics tab first.</p>
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;flex-wrap:wrap;">
+          <span id="sync-status" style="font-size:0.8rem;color:var(--teal);font-weight:500;"></span>
+          <button class="btn btn--teal" id="sync-sales-btn">🔄 Sync from Payhip</button>
+        </div>
+      </div>
+    </div>
+
     <div class="form-card">
-      <h3>Log a Sale</h3>
+      <h3>Log a Sale Manually</h3>
       <div class="form-grid">
         <div class="form-group">
           <label>Date</label>
@@ -553,7 +568,8 @@ function renderOverview() {
 // GOOGLE ANALYTICS 4 — LIVE DATA
 // ─────────────────────────────────────────
 const GA4_PROPERTY = 'properties/539267079';
-const GA4_SCOPE    = 'https://www.googleapis.com/auth/analytics.readonly';
+const GA4_SCOPE    = 'https://www.googleapis.com/auth/analytics.readonly https://www.googleapis.com/auth/spreadsheets.readonly';
+const SHEETS_ID    = '10V2D__r5FHZKhFO34_6fw01aMg_0wC-Ct_smabGopsE';
 let ga4Token       = sessionStorage.getItem('im_ga4_token') || null;
 let ga4TokenClient = null;
 
@@ -809,6 +825,72 @@ async function fetchGA4Data() {
 }
 
 // ─────────────────────────────────────────
+// PAYHIP SALES SYNC (via Google Sheets)
+// ─────────────────────────────────────────
+function convertPayhipDate(val) {
+  if (!val) return todayStr();
+  const num = parseInt(val);
+  // Unix timestamp (10+ digits = seconds since epoch)
+  if (!isNaN(num) && String(num).length >= 10) {
+    return new Date(num * 1000).toISOString().slice(0, 10);
+  }
+  // Try regular date string
+  try {
+    const d = new Date(val);
+    if (!isNaN(d)) return d.toISOString().slice(0, 10);
+  } catch {}
+  return String(val).slice(0, 10) || todayStr();
+}
+
+async function syncSalesFromSheets() {
+  const btn = document.getElementById('sync-sales-btn');
+  const status = document.getElementById('sync-status');
+  if (!ga4Token) {
+    alert('Please connect Google Analytics first (go to the Analytics tab and click Sign in with Google).');
+    return;
+  }
+  if (btn) { btn.disabled = true; btn.textContent = '⏳ Syncing…'; }
+  if (status) status.textContent = '';
+  try {
+    const range = encodeURIComponent('Sheet1!A2:D');
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEETS_ID}/values/${range}`;
+    const res = await fetch(url, {
+      headers: { 'Authorization': 'Bearer ' + ga4Token }
+    });
+    if (res.status === 401) {
+      ga4Token = null;
+      sessionStorage.removeItem('im_ga4_token');
+      if (status) status.textContent = '⚠ Session expired — reconnect in Analytics tab';
+      return;
+    }
+    if (!res.ok) throw new Error('Sheets API error ' + res.status);
+    const data = await res.json();
+    const rows = (data.values || []).filter(r => r[0] && r[1]);
+
+    const synced = rows.map((row, i) => ({
+      id: 'payhip_' + i + '_' + (row[0] || ''),
+      date: convertPayhipDate(row[0]),
+      product: (row[1] || 'Unknown').trim(),
+      amount: Math.round(parseFloat(row[2] || 0)) / 100,  // cents → dollars
+      orders: parseInt(row[3] || 1) || 1
+    })).filter(s => s.amount > 0);
+
+    synced.sort((a, b) => b.date.localeCompare(a.date));
+    save('sales', synced);
+    renderSales();
+    renderOverview();
+    if (status) status.textContent = `✓ ${synced.length} sale${synced.length !== 1 ? 's' : ''} synced · ${new Date().toLocaleTimeString()}`;
+  } catch (e) {
+    console.error('Sync error:', e);
+    if (status) status.textContent = '⚠ Sync failed — check console';
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = '🔄 Sync from Payhip'; }
+  }
+}
+
+document.getElementById('sync-sales-btn').addEventListener('click', syncSalesFromSheets);
+
+// ─────────────────────────────────────────
 // TABS
 // ─────────────────────────────────────────
 document.querySelectorAll('.dash-tab').forEach(btn => {
@@ -818,9 +900,9 @@ document.querySelectorAll('.dash-tab').forEach(btn => {
     btn.classList.add('active');
     const tab = btn.dataset.tab;
     document.getElementById('tab-'+tab).classList.add('active');
-    if (tab === 'overview')   renderOverview();
-    if (tab === 'sales')      renderSales();
-    if (tab === 'analytics')  initAnalyticsTab();
+    if (tab === 'overview')  renderOverview();
+    if (tab === 'sales')     { renderSales(); if (ga4Token) syncSalesFromSheets(); }
+    if (tab === 'analytics') initAnalyticsTab();
   });
 });
 
