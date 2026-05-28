@@ -9,10 +9,10 @@
     const HASH = '4d21fbba333628e24015e5bc0e04b0cdb22faf60038c77c2ef7a2032aecd2dc9';
     window.addEventListener('DOMContentLoaded', () => {
       if (sessionStorage.getItem('im_auth') !== HASH) {
-        window.location.href = '/admin/dashboard.html';
+        window.location.href = '/admin/dashboard/';
       } else { initApp(); }
     });
-    function logout() { sessionStorage.removeItem('im_auth'); window.location.href = '/admin/dashboard.html'; }
+    function logout() { sessionStorage.removeItem('im_auth'); window.location.href = '/admin/dashboard/'; }
   </script>
   <style>
     :root { --green:#1C4A30; --teal:#3DB08A; --amber:#F5A623; --bg:#F7F9F8; --white:#fff; --text:#1a1a1a; --muted:#6b7280; --border:#e5e7eb; }
@@ -158,7 +158,7 @@
   </div>
 
   <div class="sb-footer">
-    <a href="/admin/dashboard.html" class="sb-link">← Dashboard</a>
+    <a href="/admin/dashboard/" class="sb-link">← Dashboard</a>
     <button onclick="logout()" class="sb-signout">Sign Out</button>
   </div>
 </aside>
