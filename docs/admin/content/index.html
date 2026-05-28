@@ -738,6 +738,10 @@ window.deletePost = async function(path, title) {
 
 async function loadBlogPosts() {
   const el = document.getElementById('blog-list');
+  if (!getToken()) {
+    el.innerHTML = '<div class="empty">⚠️ No GitHub token saved. Go to <strong>Settings</strong> to add one before loading posts.</div>';
+    return;
+  }
   el.innerHTML = '<div class="empty">Loading…</div>';
   try {
     const files = await listFiles('docs/_data/blog');
@@ -766,7 +770,14 @@ async function loadBlogPosts() {
           <button class="btn btn--danger btn--sm" onclick="deletePost('${p.path}','${p.title.replace(/'/g,"\\'")}')">Delete</button>
         </div>
       </div>`).join('');
-  } catch(e) { el.innerHTML = `<div class="empty">Error loading posts: ${e.message}</div>`; }
+  } catch(e) {
+    // 404 just means the blog folder doesn't exist yet — treat as empty
+    if (e.message === 'Not Found' || e.message.includes('404')) {
+      el.innerHTML = '<div class="empty">No blog posts yet. Click "+ New Post" to create one.</div>';
+    } else {
+      el.innerHTML = `<div class="empty">Error loading posts: ${e.message}</div>`;
+    }
+  }
 }
 
 // ════════════════════════════════
@@ -916,6 +927,10 @@ window.deleteProduct = async function(path, title) {
 
 async function loadProducts() {
   const el = document.getElementById('product-list');
+  if (!getToken()) {
+    el.innerHTML = '<div class="empty">⚠️ No GitHub token saved. Go to <strong>Settings</strong> to add one before loading products.</div>';
+    return;
+  }
   el.innerHTML = '<div class="empty">Loading…</div>';
   try {
     const files = await listFiles('docs/_data/resources');
@@ -941,7 +956,13 @@ async function loadProducts() {
           <button class="btn btn--danger btn--sm" onclick="deleteProduct('${p.path}','${p.title.replace(/'/g,"\\'")}')">Delete</button>
         </div>
       </div>`).join('');
-  } catch(e) { el.innerHTML = `<div class="empty">Error loading products: ${e.message}</div>`; }
+  } catch(e) {
+    if (e.message === 'Not Found' || e.message.includes('404')) {
+      el.innerHTML = '<div class="empty">No products yet. Click "+ New Product" to add one.</div>';
+    } else {
+      el.innerHTML = `<div class="empty">Error loading products: ${e.message}</div>`;
+    }
+  }
 }
 
 // ════════════════════════════════
