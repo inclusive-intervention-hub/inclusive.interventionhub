@@ -121,8 +121,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function applyShopUrlAudienceParam() {
       const params = new URLSearchParams(window.location.search);
-      const catParam = params.get('cat');
+      const catParam = (params.get('cat') || '').toLowerCase();
       if (catParam) {
+        // Set the audience directly — filter pills may not be present in the layout
+        activeAudience = catParam;
         const matchPill = document.querySelector(`.filter-pill[data-filter="audience"][data-value="${catParam}"]`);
         if (matchPill) matchPill.click();
       }
