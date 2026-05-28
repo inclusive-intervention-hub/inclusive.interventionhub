@@ -194,24 +194,18 @@
     <button class="sb-btn active" data-tab="overview">📊 Overview</button>
     <button class="sb-btn" data-tab="sales">💰 Sales Tracker</button>
     <button class="sb-btn" data-tab="analytics">📈 Analytics</button>
-  </nav>
-
-  <hr class="sb-divider" />
-  <div class="sb-links">
+    <hr class="sb-divider" />
     <span class="sb-label">Manage</span>
     <a href="/admin/content/" class="sb-link">✏️ Content Manager</a>
     <a href="/" target="_blank" class="sb-link">↗ Live Site</a>
-  </div>
+  </nav>
 
-  <hr class="sb-divider" />
-  <div class="sb-links">
-    <span class="sb-label">External</span>
+  <div class="sb-footer">
+    <span class="sb-label" style="padding-top:0;">External</span>
     <a href="https://analytics.google.com" target="_blank" class="sb-link">📊 Google Analytics</a>
     <a href="https://payhip.com/dashboard" target="_blank" class="sb-link">💰 Payhip</a>
     <a href="https://github.com/inclusive-materials/inclusive.materials" target="_blank" class="sb-link">🐙 GitHub</a>
-  </div>
-
-  <div class="sb-footer">
+    <hr class="sb-divider" style="margin:.5rem 0;" />
     <button onclick="logout()" class="sb-signout">Sign Out</button>
   </div>
 </aside>
@@ -222,14 +216,6 @@
 
   <!-- OVERVIEW -->
   <div id="tab-overview" class="tab-panel active">
-
-    <!-- Quick Actions -->
-    <div style="display:flex;gap:.75rem;flex-wrap:wrap;margin-bottom:1.75rem;">
-      <a href="/admin/content/" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--green);color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#163d27'" onmouseout="this.style.background='var(--green)'">✏️ New Blog Post</a>
-      <a href="/admin/content/" style="display:inline-flex;align-items:center;gap:.5rem;background:var(--teal);color:#fff;padding:.6rem 1.25rem;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:background .15s;" onmouseover="this.style.background='#33a07a'" onmouseout="this.style.background='var(--teal)'">⭐ New Product</a>
-      <a href="https://payhip.com/dashboard" target="_blank" style="display:inline-flex;align-items:center;gap:.5rem;background:#fff;color:var(--green);border:1px solid var(--border);padding:.6rem 1.25rem;border-radius:8px;font-size:.875rem;font-weight:600;text-decoration:none;transition:all .15s;" onmouseover="this.style.borderColor='var(--teal)'" onmouseout="this.style.borderColor='var(--border)'">💰 View Payhip Sales</a>
-    </div>
-
     <div class="cards-row" id="overview-cards"></div>
     <div class="charts-row">
       <div class="chart-card">
