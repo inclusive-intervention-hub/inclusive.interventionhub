@@ -932,6 +932,52 @@
   }
 
 })();
+
+// ══════════════════════════════════════════
+// Hide sidebar categories with no products
+// ══════════════════════════════════════════
+function hideEmptyCategories() {
+  var cards = Array.from(document.querySelectorAll('#shop-resources-container .product-card'));
+  if (!cards.length) return;
+
+  // For each tag link, check if at least one product matches
+  document.querySelectorAll('.sidebar-subareas a[data-tag]').forEach(function (link) {
+    var audience = (link.getAttribute('data-audience') || '').toLowerCase();
+    var tag      = (link.getAttribute('data-tag') || '').toLowerCase();
+    var hasMatch = cards.some(function (card) {
+      var cardAud  = (card.getAttribute('data-audience') || '').toLowerCase();
+      var cardTags = (card.getAttribute('data-tags') || '').toLowerCase();
+      var title    = ((card.querySelector('h3') || {}).textContent || '').toLowerCase();
+      var audMatch = audience === 'all' || cardAud === audience;
+      var tagMatch = !tag || cardTags.indexOf(tag) !== -1 || title.indexOf(tag) !== -1;
+      return audMatch && tagMatch;
+    });
+    var li = link.closest('li');
+    if (li) li.style.display = hasMatch ? '' : 'none';
+  });
+
+  // Hide domain groups where ALL links are hidden
+  document.querySelectorAll('.sidebar-domain-item').forEach(function (domain) {
+    var anyVisible = Array.from(domain.querySelectorAll('li')).some(function (li) {
+      return li.style.display !== 'none';
+    });
+    domain.style.display = anyVisible ? '' : 'none';
+  });
+
+  // Hide entire specialty (OT / Speech / SPED / General) if all its domains are hidden
+  document.querySelectorAll('.sidebar-specialty').forEach(function (specialty) {
+    var anyVisible = Array.from(specialty.querySelectorAll('.sidebar-domain-item')).some(function (d) {
+      return d.style.display !== 'none';
+    });
+    specialty.style.display = anyVisible ? '' : 'none';
+  });
+}
+
+// Run immediately (for static products already in HTML)
+hideEmptyCategories();
+
+// Re-run when CMS products finish loading
+document.addEventListener('cms:shop-ready', hideEmptyCategories);
 </script>
 </body>
 </html>
