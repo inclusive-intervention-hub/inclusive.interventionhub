@@ -971,6 +971,12 @@ async function initApp() {
   if (getToken()) {
     document.getElementById('gh-token-input').placeholder = '••••••• (token already saved)';
   }
+  // Auto-navigate to section from URL hash (e.g. /admin/content/#products)
+  const sec = window.location.hash.replace('#', '');
+  if (sec) {
+    const btn = document.querySelector(`.sb-btn[data-sec="${sec}"]`);
+    if (btn) btn.click();
+  }
 }
 </script>
 </body>
