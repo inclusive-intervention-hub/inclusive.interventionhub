@@ -242,7 +242,7 @@
       tagsHtml += '<span style="' + chipStyle + ' ' + chipBase + '">' + escapeHtml(catLabel) + '</span>';
     }
     if (r.level) {
-      tagsHtml += '<span style="background:#E3F2FD; color:#1565C0; ' + chipBase + '">' + escapeHtml(r.level) + '</span>';
+      tagsHtml += '<span style="' + chipStyle + ' ' + chipBase + '">' + escapeHtml(r.level) + '</span>';
     }
     tagsHtml += '</div>';
 
