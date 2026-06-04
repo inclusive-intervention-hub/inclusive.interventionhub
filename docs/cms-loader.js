@@ -8,6 +8,7 @@
  *
  * Blog posts also read docs/_data/blog/manifest.json (updated by CI when you push new .md files)
  * so listings still work if api.github.com is blocked (ad blockers, strict networks).
+ * Resources also read docs/_data/resources/manifest.json (same pattern, updated by CI).
  *
  * Publishing (GitHub Pages): docs/.nojekyll is required so Jekyll does not strip folders whose names
  * start with "_" — otherwise /_data/ URLs return 404 on the live site.
@@ -290,7 +291,7 @@
   function parseFrontmatterMarkdown(text) {
     var result = { meta: {}, body: text || '', raw: text || '' };
     if (!text || typeof text !== 'string') return result;
-    text = text.replace(/^\uFEFF/, '');
+    text = text.replace(/^﻿/, '');
     var m = text.match(/^---\s*\r?\n([\s\S]*?)\r?\n---\s*\r?\n?([\s\S]*)$/);
     if (!m) {
       result.body = text;
@@ -422,12 +423,28 @@
     });
   }
 
+  async function loadResourceFilesListFromManifest() {
+    var data = await fetchJson('/_data/resources/manifest.json');
+    if (!data || !Array.isArray(data.files)) return [];
+    return data.files
+      .map(function (name) {
+        return String(name || '')
+          .replace(/^.*[\/\\]/, '')
+          .trim();
+      })
+      .filter(function (name) {
+        return name && /\.json$/i.test(name) && name !== 'manifest.json';
+      });
+  }
+
   async function loadResourceFilesList() {
+    var man = await loadResourceFilesListFromManifest();
+    if (man.length) return man;
     var entries = await listRepoFolder('docs/_data/resources');
     if (!Array.isArray(entries) || !entries.length) return [];
     return entries
       .filter(function (e) {
-        return e.type === 'file' && e.name && /\.json$/i.test(e.name);
+        return e.type === 'file' && e.name && /\.json$/i.test(e.name) && e.name !== 'manifest.json';
       })
       .map(function (e) {
         return e.name;
@@ -452,7 +469,7 @@
     return data.files
       .map(function (name) {
         return String(name || '')
-          .replace(/^.*[/\\]/, '')
+          .replace(/^.*[\/\\]/, '')
           .trim();
       })
       .filter(function (name) {
@@ -474,13 +491,14 @@
     var names = await loadResourceFilesList();
     if (!names.length) return [];
     names = names.slice().reverse();
-    var resources = [];
-    for (var i = 0; i < names.length; i++) {
-      var path = '/_data/resources/' + encodeURIComponent(names[i]);
-      var json = await fetchJson(path);
-      if (json && typeof json === 'object') resources.push(json);
-    }
-    return resources;
+    var results = await Promise.all(
+      names.map(function (name) {
+        return fetchJson('/_data/resources/' + encodeURIComponent(name));
+      })
+    );
+    return results.filter(function (json) {
+      return json && typeof json === 'object';
+    });
   }
 
   async function loadBlogPostsParsed() {
@@ -514,7 +532,7 @@
       }
     }
     slug = String(slug).trim();
-    if (/[/\\]|\.\./.test(slug)) slug = '';
+    if (/[\/\\]|\.\.|/.test(slug)) slug = '';
 
     var loading = document.getElementById('blog-post-loading');
     var content = document.getElementById('blog-post-content');
@@ -590,33 +608,42 @@
   }
 
   function loadHomepage() {
+    var resourcesPromise = document.getElementById('featured-resources-container')
+      ? loadResources()
+      : Promise.resolve([]);
+
+    var blogPromise = document.getElementById('blog-posts-container')
+      ? loadBlogPostsParsed()
+      : Promise.resolve([]);
+
     fetchJson('/_data/homepage.json').then(function (data) {
       if (data) applyDataCmsFields(document, data);
-      var feat = document.getElementById('featured-resources-container');
-      if (feat) {
-        loadResources().then(function (resources) {
-          if (!resources.length) return;
-          var featured = resources.filter(function (r) {
-            return normalizeResource(r).featured;
-          });
-          if (!featured.length) featured = resources;
-          var html = featured.map(function (r) {
-            return buildProductCard(r, { includeTags: true });
-          }).join('');
-          if (html) feat.innerHTML = html;
-        });
-      }
-
-      var blogEl = document.getElementById('blog-posts-container');
-      if (blogEl) {
-        loadBlogPostsParsed().then(function (posts) {
-          if (!posts.length) return;
-          var top = posts.slice(0, 3);
-          var html = top.map(blogMiniHtml).join('');
-          if (html) blogEl.innerHTML = html;
-        });
-      }
     });
+
+    var feat = document.getElementById('featured-resources-container');
+    if (feat) {
+      resourcesPromise.then(function (resources) {
+        if (!resources.length) return;
+        var featured = resources.filter(function (r) {
+          return normalizeResource(r).featured;
+        });
+        if (!featured.length) featured = resources;
+        var html = featured.map(function (r) {
+          return buildProductCard(r, { includeTags: true });
+        }).join('');
+        if (html) feat.innerHTML = html;
+      });
+    }
+
+    var blogEl = document.getElementById('blog-posts-container');
+    if (blogEl) {
+      blogPromise.then(function (posts) {
+        if (!posts.length) return;
+        var top = posts.slice(0, 3);
+        var html = top.map(blogMiniHtml).join('');
+        if (html) blogEl.innerHTML = html;
+      });
+    }
   }
 
   function loadAbout() {
@@ -682,7 +709,7 @@
       var legacyHash = window.location.hash.replace(/^#/, '');
       if (legacyHash.indexOf('post-') === 0) {
         var legacySlug = legacyHash.slice('post-'.length).trim();
-        if (legacySlug && !/[\/\\]|\.\./.test(legacySlug)) {
+        if (legacySlug && !/[\/\\]|\.\.|/.test(legacySlug)) {
           window.location.replace('./blog-post.html?post=' + encodeURIComponent(legacySlug));
           return;
         }
