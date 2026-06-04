@@ -36,6 +36,7 @@
   </script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/dompurify/dist/purify.min.js"></script>
   <!-- Google Identity Services — for GA4 OAuth -->
   <script src="https://accounts.google.com/gsi/client" async defer onload="onGISLoad()"></script>
   <style>
@@ -1269,7 +1270,8 @@ function cancelBlogForm() {
 }
 function toggleBlogPreview() {
   const el = document.getElementById('blog-preview');
-  el.innerHTML = (typeof marked !== 'undefined' ? marked.parse : (s=>s))(document.getElementById('bf-body').value || '*Nothing to preview yet.*');
+  var raw = (typeof marked !== 'undefined' ? marked.parse : (s=>s))(document.getElementById('bf-body').value || '*Nothing to preview yet.*');
+  el.innerHTML = typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(raw) : raw;
   el.style.display = el.style.display === 'none' ? 'block' : 'none';
 }
 

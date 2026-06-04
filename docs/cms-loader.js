@@ -45,7 +45,8 @@
     if (!markdown || typeof markdown !== 'string') return '';
     if (typeof marked !== 'undefined' && marked.parse) {
       try {
-        return marked.parse(markdown, { mangle: false, headerIds: false });
+        var html = marked.parse(markdown, { mangle: false, headerIds: false });
+        return typeof DOMPurify !== 'undefined' ? DOMPurify.sanitize(html) : html;
       } catch (e) {
         return escapeHtml(markdown);
       }
