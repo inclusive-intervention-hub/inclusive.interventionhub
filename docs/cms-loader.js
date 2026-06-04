@@ -477,10 +477,12 @@
     for (var i = 0; i < names.length; i++) {
       var path = '/_data/resources/' + encodeURIComponent(names[i]);
       var json = await fetchJson(path);
-      if (json && typeof json === 'object') resources.push(json);
+      if (json && typeof json === 'object') resources.push(Object.assign({ _filename: names[i] }, json));
     }
     resources.sort(function (a, b) {
-      return (b.createdAt || '').localeCompare(a.createdAt || '');
+      var d = (b.createdAt || '').localeCompare(a.createdAt || '');
+      if (d !== 0) return d;
+      return (b._filename || '').localeCompare(a._filename || '');
     });
     return resources;
   }
