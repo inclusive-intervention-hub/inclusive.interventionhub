@@ -490,15 +490,27 @@
   async function loadResources() {
     var names = await loadResourceFilesList();
     if (!names.length) return [];
-    names = names.slice().reverse();
     var results = await Promise.all(
       names.map(function (name) {
-        return fetchJson('/_data/resources/' + encodeURIComponent(name));
+        return fetchJson('/_data/resources/' + encodeURIComponent(name)).then(function (json) {
+          return json && typeof json === 'object' ? Object.assign({ _filename: name }, json) : null;
+        });
       })
     );
-    return results.filter(function (json) {
-      return json && typeof json === 'object';
+    var resources = results.filter(Boolean);
+    resources.sort(function (a, b) {
+      var da = a.createdAt || '';
+      var db = b.createdAt || '';
+      if (da && db) {
+        var d = db.localeCompare(da);
+        if (d !== 0) return d;
+        return a._filename.localeCompare(b._filename);
+      }
+      if (da) return -1;
+      if (db) return 1;
+      return b._filename.localeCompare(a._filename);
     });
+    return resources;
   }
 
   async function loadBlogPostsParsed() {
