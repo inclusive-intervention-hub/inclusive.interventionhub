@@ -434,6 +434,20 @@
       });
   }
 
+  async function loadResourceFilesFromManifest() {
+    var data = await fetchJson('/_data/resources/manifest.json');
+    if (!data || !Array.isArray(data.files)) return [];
+    return data.files
+      .map(function (name) { return String(name || '').replace(/^.*[/\\]/, '').trim(); })
+      .filter(function (name) { return name && /\.json$/i.test(name) && name !== 'manifest.json'; });
+  }
+
+  async function loadResourceNames() {
+    var man = await loadResourceFilesFromManifest();
+    if (man.length) return man;
+    return loadResourceFilesList();
+  }
+
   async function loadBlogFilenamesFromGithub() {
     var entries = await listRepoFolder('docs/_data/blog');
     if (!Array.isArray(entries) || !entries.length) return [];
@@ -471,14 +485,15 @@
   }
 
   async function loadResources() {
-    var names = await loadResourceFilesList();
+    var names = await loadResourceNames();
     if (!names.length) return [];
-    var resources = [];
-    for (var i = 0; i < names.length; i++) {
-      var path = '/_data/resources/' + encodeURIComponent(names[i]);
-      var json = await fetchJson(path);
-      if (json && typeof json === 'object') resources.push(Object.assign({ _filename: names[i] }, json));
-    }
+    var results = await Promise.all(names.map(function (name) {
+      return fetchJson('/_data/resources/' + encodeURIComponent(name))
+        .then(function (json) {
+          return (json && typeof json === 'object') ? Object.assign({ _filename: name }, json) : null;
+        });
+    }));
+    var resources = results.filter(Boolean);
     resources.sort(function (a, b) {
       var d = (b.createdAt || '').localeCompare(a.createdAt || '');
       if (d !== 0) return d;

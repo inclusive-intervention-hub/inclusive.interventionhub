@@ -1550,6 +1550,7 @@ document.getElementById('save-product-btn').addEventListener('click', async () =
   showCMSMsg('product-msg','Saving…','info');
   try {
     await cmsWriteFile(path, JSON.stringify(payload, null, 2), `${prodEditSha ? 'Update' : 'Add'} product: ${title}`, prodEditSha);
+    await updateResourceManifest(filename);
     showCMSMsg('product-msg','✓ Product saved! Site updates in ~1 min.','ok');
     cancelProductForm(); loadProducts();
   } catch(e) { showCMSMsg('product-msg',`Error: ${e.message}`,'err'); }
@@ -1567,7 +1568,7 @@ window.editProduct = async function(path) {
     document.getElementById('pf-desc').value           = p.description || '';
     document.getElementById('pf-price').value          = p.price || '';
     document.getElementById('pf-original-price').value = p.originalPrice || '';
-    document.getElementById('pf-badge').value          = p.badge || 'Featured';
+    document.getElementById('pf-badge').value          = p.badge || '';
     document.getElementById('pf-level').value          = p.level || '';
     document.getElementById('pf-image').value          = p.image || '';
     document.getElementById('pf-url').value            = p.url || '';
@@ -1582,12 +1583,24 @@ window.editProduct = async function(path) {
   } catch(e) { showCMSMsg('product-msg',`Error loading: ${e.message}`,'err'); }
 };
 
+async function updateResourceManifest(addFile, removeFile) {
+  const manifestPath = 'docs/_data/resources/manifest.json';
+  let files = [], sha = null;
+  try { const r = await cmsReadFile(manifestPath); sha = r.sha; const d = JSON.parse(r.content); if (Array.isArray(d.files)) files = d.files; } catch {}
+  if (removeFile) files = files.filter(f => f !== removeFile);
+  if (addFile && !files.includes(addFile)) files.push(addFile);
+  files = files.filter(f => f && f !== 'manifest.json').sort();
+  await cmsWriteFile(manifestPath, JSON.stringify({ files }, null, 2), 'Update resources manifest', sha);
+}
+
 window.deleteProduct = async function(path, title) {
   if (!confirm(`Delete "${title}"? This cannot be undone.`)) return;
   if (!getCMSToken()) { alert('No GitHub token — open CMS Settings.'); return; }
   try {
+    const filename = path.split('/').pop();
     const { sha } = await cmsReadFile(path);
     await cmsRemoveFile(path, `Delete product: ${title}`, sha);
+    await updateResourceManifest(null, filename);
     loadProducts();
   } catch(e) { alert(`Error: ${e.message}`); }
 };
