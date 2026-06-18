@@ -484,9 +484,13 @@
 
   <!-- ─────────────── BLOG POSTS ─────────────── -->
   <div id="tab-blog" class="tab-panel">
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;">
       <h2 style="font-size:1.05rem;font-weight:700;color:var(--green);">Blog Posts</h2>
       <button class="btn btn--primary" id="new-post-btn">+ New Post</button>
+    </div>
+    <div style="margin-bottom:1.25rem;position:relative;">
+      <svg style="position:absolute;left:10px;top:50%;transform:translateY(-50%);pointer-events:none;" width="14" height="14" viewBox="0 0 16 16" fill="none"><circle cx="7" cy="7" r="5" stroke="#90a89a" stroke-width="1.5"/><path d="M11 11l3 3" stroke="#90a89a" stroke-width="1.5" stroke-linecap="round"/></svg>
+      <input id="blog-search" type="text" placeholder="Search posts…" oninput="filterBlogList(this.value)" style="width:100%;padding:.45rem .75rem .45rem 2rem;border:1px solid #e5e7eb;border-radius:8px;font-size:.875rem;outline:none;box-sizing:border-box;" />
     </div>
     <div class="box" id="blog-form-box" style="display:none;">
       <h2 id="blog-form-title">New Blog Post</h2>
@@ -1444,8 +1448,9 @@ async function loadBlogPosts() {
         return { name: f.name, path: `docs/_data/blog/${f.name}`, title: meta.title || f.name, date: meta.date || '', published: meta.published !== false };
       } catch { return { name: f.name, path: `docs/_data/blog/${f.name}`, title: f.name, date: '', published: true }; }
     }));
+    const blogQuery = (document.getElementById('blog-search')?.value || '').toLowerCase().trim();
     el.innerHTML = posts.map(p => `
-      <div class="item">
+      <div class="item blog-list-item" data-search="${(p.title + ' ' + p.name).toLowerCase()}">
         <div class="item__info">
           <div class="item__title">${p.title}</div>
           <div class="item__meta">${p.date ? new Date(p.date).toLocaleDateString('en-US',{year:'numeric',month:'long',day:'numeric'}) : '—'} &nbsp;·&nbsp; ${p.published ? '<span style="color:#16a34a">Published</span>' : '<span style="color:#9ca3af">Draft</span>'}</div>
@@ -1455,6 +1460,7 @@ async function loadBlogPosts() {
           <button class="btn btn--danger btn--sm" onclick="deletePost('${p.path}','${p.title.replace(/'/g,"\\'")}')">Delete</button>
         </div>
       </div>`).join('');
+    if (blogQuery) filterBlogList(blogQuery);
   } catch(e) {
     if (e.message === 'Not Found' || e.message.includes('404')) {
       el.innerHTML = '<div class="cm-empty">No blog posts yet. Click "+ New Post" to create one.</div>';
@@ -1617,6 +1623,13 @@ window.deleteProduct = async function(path, title) {
     loadProducts();
   } catch(e) { alert(`Error: ${e.message}`); }
 };
+
+function filterBlogList(query) {
+  const q = query.toLowerCase().trim();
+  document.querySelectorAll('#blog-list .blog-list-item').forEach(function(item) {
+    item.style.display = (!q || item.dataset.search.includes(q)) ? '' : 'none';
+  });
+}
 
 function filterProductList(query) {
   const q = query.toLowerCase().trim();
