@@ -618,33 +618,39 @@
   }
 
   function loadHomepage() {
-    fetchJson('/_data/homepage.json').then(function (data) {
-      if (data) applyDataCmsFields(document, data);
-      var feat = document.getElementById('featured-resources-container');
-      if (feat) {
-        loadResources().then(function (resources) {
-          if (!resources.length) return;
-          var featured = resources.filter(function (r) {
-            return normalizeResource(r).featured;
-          });
-          if (!featured.length) featured = resources;
-          var html = featured.map(function (r) {
-            return buildProductCard(r, { includeTags: true });
-          }).join('');
-          if (html) feat.innerHTML = html;
-        });
-      }
+    // Kick off all fetches in parallel — don't wait for homepage.json before loading products/blog
+    var dataPromise      = fetchJson('/_data/homepage.json');
+    var resourcesPromise = loadResources();
+    var blogPromise      = (document.getElementById('blog-posts-container')) ? loadBlogPostsParsed() : Promise.resolve([]);
 
-      var blogEl = document.getElementById('blog-posts-container');
-      if (blogEl) {
-        loadBlogPostsParsed().then(function (posts) {
-          if (!posts.length) return;
-          var top = posts.slice(0, 3);
-          var html = top.map(blogMiniHtml).join('');
-          if (html) blogEl.innerHTML = html;
-        });
-      }
+    dataPromise.then(function (data) {
+      if (data) applyDataCmsFields(document, data);
     });
+
+    var feat = document.getElementById('featured-resources-container');
+    if (feat) {
+      resourcesPromise.then(function (resources) {
+        if (!resources.length) return;
+        var featured = resources.filter(function (r) {
+          return normalizeResource(r).featured;
+        });
+        if (!featured.length) featured = resources;
+        var html = featured.map(function (r) {
+          return buildProductCard(r, { includeTags: true });
+        }).join('');
+        if (html) feat.innerHTML = html;
+      });
+    }
+
+    var blogEl = document.getElementById('blog-posts-container');
+    if (blogEl) {
+      blogPromise.then(function (posts) {
+        if (!posts.length) return;
+        var top = posts.slice(0, 3);
+        var html = top.map(blogMiniHtml).join('');
+        if (html) blogEl.innerHTML = html;
+      });
+    }
   }
 
   function loadAbout() {
