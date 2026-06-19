@@ -1,0 +1,95 @@
+# Automatically shortens product descriptions to 1–2 tight sentences
+# whenever a resource JSON is saved.
+# Requires: GEMINI_API_KEY secret in the repo.
+name: Shorten product descriptions
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'docs/_data/resources/*.json'
+
+permissions:
+  contents: write
+
+jobs:
+  shorten:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Shorten descriptions via Gemini API
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+        run: |
+          python3 << 'PY'
+          import json, os, urllib.request, subprocess
+
+          API_KEY = os.environ["GEMINI_API_KEY"]
+
+          result = subprocess.run(
+              ["git", "diff", "--name-only", "HEAD~1", "HEAD", "--", "docs/_data/resources/*.json"],
+              capture_output=True, text=True
+          )
+          files = [f for f in result.stdout.strip().splitlines() if f and "manifest.json" not in f]
+
+          PROMPT = (
+              "You rewrite product descriptions for a special education / therapy resource shop. "
+              "Rewrite the description in 1–2 tight sentences (max 160 characters total). "
+              "Pattern: what's in the product · one key feature. Include age range only if it adds useful context. "
+              "Keep clinical terms (IEP, CDC, AAP, OT, SLP). No filler words. "
+              "Return ONLY the rewritten description, nothing else."
+          )
+
+          def shorten(desc, title):
+              payload = json.dumps({
+                  "contents": [{
+                      "parts": [{"text": f"{PROMPT}\n\nTitle: {title}\nDescription: {desc}"}]
+                  }],
+                  "generationConfig": {"maxOutputTokens": 120, "temperature": 0.3}
+              }).encode()
+              url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={API_KEY}"
+              req = urllib.request.Request(url, data=payload, headers={"content-type": "application/json"})
+              with urllib.request.urlopen(req) as r:
+                  data = json.loads(r.read())
+              return data["candidates"][0]["content"]["parts"][0]["text"].strip()
+
+          changed = False
+          for path in files:
+              if not os.path.exists(path):
+                  continue
+              with open(path, encoding="utf-8") as f:
+                  obj = json.load(f)
+              original = obj.get("description", "")
+              if not original:
+                  continue
+              shortened = shorten(original, obj.get("title", ""))
+              if shortened and shortened != original:
+                  obj["description"] = shortened
+                  with open(path, "w", encoding="utf-8") as f:
+                      json.dump(obj, f, indent=2, ensure_ascii=False)
+                      f.write("\n")
+                  print(f"Updated: {path}")
+                  print(f"  Before: {original}")
+                  print(f"  After:  {shortened}")
+                  changed = True
+              else:
+                  print(f"No change needed: {path}")
+
+          if not changed:
+              print("All descriptions already concise.")
+          PY
+
+      - name: Commit shortened descriptions
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add docs/_data/resources/*.json
+          if git diff --staged --quiet; then
+            echo "No changes to commit."
+          else
+            git commit -m "chore: auto-shorten product descriptions"
+            git push
+          fi
