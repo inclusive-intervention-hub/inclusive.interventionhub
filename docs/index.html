@@ -218,6 +218,7 @@
 .wwo-article-body p  { font-size: 0.88rem; color: var(--text-muted); line-height: 1.7; flex: 1; }
 .wwo-article-body .read-link { font-size: 0.85rem; font-weight: 700; color: var(--green-dark); }
 
+
 @media (max-width: 860px) {
   .wwo-services-grid { grid-template-columns: 1fr; }
   .wwo-article-card  { grid-template-columns: 1fr; }
@@ -275,6 +276,26 @@
     <div id="featured-resources-container" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:20px;"></div>
   </div>
 </section>
+<script>
+(function () {
+  var feat = document.getElementById('featured-resources-container');
+  if (!feat) return;
+  function hidePrices() {
+    feat.querySelectorAll('.product-card').forEach(function (card) {
+      // The price row is the last div in the card body — it contains price + Buy Now button.
+      // Hide only the price element (first child), keep the Buy Now link.
+      var rows = card.querySelectorAll('div[style*="justify-content:space-between"]');
+      rows.forEach(function (row) {
+        Array.from(row.children).forEach(function (child) {
+          if (child.tagName !== 'A') child.style.display = 'none';
+        });
+      });
+    });
+  }
+  var obs = new MutationObserver(function () { hidePrices(); });
+  obs.observe(feat, { childList: true, subtree: true });
+})();
+</script>
 
 <!-- ── BAND 3: ARTICLES & TIPS (white bg) ── -->
 <section class="wwo-band wwo-band--surface">
