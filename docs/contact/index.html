@@ -117,7 +117,7 @@
 
 <!-- Right: form -->
       <div class="contact-form">
-        <form id="contactForm" action="https://hook.us2.make.com/dygxlzskmsj5k9qm9rdip5bis2a8ckj6" method="POST" novalidate>
+        <form id="contactForm" novalidate>
           <div class="form-row">
             <div class="form-group">
               <label for="name">Name</label>
@@ -136,15 +136,56 @@
             <label for="message">Message</label>
             <textarea id="message" name="message" placeholder="Your message…" required></textarea>
           </div>
-          <button type="submit" class="btn btn--primary" style="width:100%; justify-content:center; gap:8px;">
+          <button type="submit" id="submitBtn" class="btn btn--primary" style="width:100%; justify-content:center; gap:8px;">
             Send Message
             <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
           </button>
-          <!-- Success message (hidden by default) -->
           <div id="formSuccess" class="hidden" style="margin-top:16px; padding:14px 18px; background:var(--green-pale); border-radius:var(--radius-sm); color:var(--green-dark); font-size:0.9rem; font-weight:500;">
             ✓ Message sent! I'll get back to you within 1–5 days.
           </div>
+          <div id="formError" class="hidden" style="margin-top:16px; padding:14px 18px; background:#fff0f0; border-radius:var(--radius-sm); color:#c0392b; font-size:0.9rem; font-weight:500;">
+            ✗ Something went wrong. Please email us directly at inclusiveinterventionhub@gmail.com
+          </div>
         </form>
+
+        <script>
+        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+          e.preventDefault();
+          const btn = document.getElementById('submitBtn');
+          const success = document.getElementById('formSuccess');
+          const error = document.getElementById('formError');
+
+          btn.disabled = true;
+          btn.textContent = 'Sending…';
+          success.classList.add('hidden');
+          error.classList.add('hidden');
+
+          try {
+            const res = await fetch('https://hook.us2.make.com/dygxlzskmsj5k9qm9rdip5bis2a8ckj6', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({
+                name:    document.getElementById('name').value,
+                email:   document.getElementById('email').value,
+                subject: document.getElementById('subject').value,
+                message: document.getElementById('message').value
+              })
+            });
+
+            if (res.ok) {
+              success.classList.remove('hidden');
+              this.reset();
+            } else {
+              error.classList.remove('hidden');
+            }
+          } catch(err) {
+            error.classList.remove('hidden');
+          }
+
+          btn.disabled = false;
+          btn.innerHTML = 'Send Message <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8h12M9 4l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+        });
+        </script>
       </div>
 
     </div>
