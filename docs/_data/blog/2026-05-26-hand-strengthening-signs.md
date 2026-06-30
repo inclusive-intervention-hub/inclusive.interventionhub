@@ -3,8 +3,9 @@ title: "5 Signs a Child Needs Hand Strengthening Activities And What To Do About
 date: "2026-05-26T00:00:00.000Z"
 summary: "Is your child or student struggling to write, cut, or grip? These 5 signs may mean they need hand strengthening support — and here is what actually helps."
 image: "/photos/blog-hand-strengthening-hero.jpg"
-published: true
+published: false
 ---
+
 
 Working with learners of diverse needs, I noticed early on that the struggle was not always about reading or math. What stood out, more than I expected, was difficulty with writing. Not because they did not know their letters. But because their bodies were simply not ready yet.
 
