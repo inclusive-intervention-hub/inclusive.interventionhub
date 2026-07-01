@@ -38,4 +38,5 @@ collections:
       - {label: "Cover Image", name: "image", widget: "image", required: false}
       - {label: "Full Article Body", name: "body", widget: "markdown"}
       - {label: "Published", name: "published", widget: "boolean", default: true}
+      - {label: "Featured on Homepage", name: "featured", widget: "boolean", default: true}
 

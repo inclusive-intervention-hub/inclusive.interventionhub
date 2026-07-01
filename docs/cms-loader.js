@@ -321,6 +321,8 @@
     if (isNaN(t)) t = 0;
     var summary = meta.summary || '';
     var image = meta.image || '';
+    var featured = meta.featured;
+    var featStr = featured != null ? String(featured).toLowerCase().trim() : '';
     return {
       slug: slug,
       title: title,
@@ -329,6 +331,7 @@
       summary: summary,
       image: image,
       sortKey: t,
+      featured: !(featured === false || featStr === 'false' || featStr === 'no' || featStr === '0'),
     };
   }
 
@@ -645,8 +648,14 @@
     var blogEl = document.getElementById('blog-posts-container');
     if (blogEl) {
       blogPromise.then(function (posts) {
-        if (!posts.length) return;
-        var top = posts.slice(0, 3);
+        var section = document.getElementById('homepage-articles-section');
+        if (!posts.length) {
+          if (section) section.style.display = 'none';
+          return;
+        }
+        var featured = posts.filter(function (p) { return p.featured; });
+        if (!featured.length) featured = posts;
+        var top = featured.slice(0, 3);
         var html = top.map(blogMiniHtml).join('');
         if (html) blogEl.innerHTML = html;
       });
