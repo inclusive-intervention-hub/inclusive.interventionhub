@@ -720,8 +720,16 @@
     if (!resources.length) dropdown.style.display = 'none';
   }
 
+  async function syncBlogNav() {
+    var navItem = document.getElementById('navBlogLi');
+    if (!navItem) return;
+    var posts = await loadBlogPostsParsed();
+    if (posts.length) navItem.style.display = '';
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     syncResourcesNav();
+    syncBlogNav();
 
     var path = window.location.pathname.replace(/\/+$/, '') || '/';
     var base = (path.split('/').pop() || '').toLowerCase();
