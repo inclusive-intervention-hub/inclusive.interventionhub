@@ -71,14 +71,14 @@
   <div class="hero__content">
     <span class="hero__badge">
       <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><circle cx="7" cy="7" r="6" stroke="#3DB08A" stroke-width="1.5"/><path d="M4 7l2 2 4-4" stroke="#3DB08A" stroke-width="1.5" stroke-linecap="round"/></svg>
-      <span data-cms="hero_tagline">For SNEd, Educators, Therapists &amp; Families</span>
+      <span data-cms="hero_tagline">For Children, Families &amp; Schools</span>
     </span>
     <h1 class="hero__title"><span data-cms="hero_title">Inclusive<br/><span>Intervention Hub</span></span></h1>
     <p class="hero__subtitle" data-cms="hero_subtitle">Resources. Services. Real impact.</p>
     <p class="hero__body" data-cms="hero_description">
       More than a resource library — we offer expert consultation, parent and teacher
       coaching, and hands-on intervention support. Everything here is designed to help
-      every learner thrive, from the classroom to the therapy room to home.
+      every learner thrive, from the classroom to home.
     </p>
     <div class="hero__actions">
       <a href="/services/" class="btn btn--primary">Our Services →</a>
@@ -174,13 +174,22 @@
   background: rgba(255,255,255,0.10);
   border: 1px solid rgba(255,255,255,0.18);
   border-radius: var(--radius);
-  padding: 32px 26px;
+  padding: 0 26px 32px;
   display: flex;
   flex-direction: column;
   gap: 14px;
+  overflow: hidden;
   transition: background 0.2s, transform 0.2s;
 }
 .wwo-service-card:hover { background: rgba(255,255,255,0.16); transform: translateY(-2px); }
+.wwo-service-card__photo {
+  width: calc(100% + 52px);
+  max-width: none;
+  margin: 0 -26px;
+  height: 140px;
+  object-fit: cover;
+  object-position: top;
+}
 .wwo-service-card__icon {
   width: 48px; height: 48px;
   background: rgba(255,255,255,0.2);
@@ -240,6 +249,7 @@
     </div>
     <div class="wwo-services-grid">
       <div class="wwo-service-card">
+        <img class="wwo-service-card__photo" src="/photos/consultation-hero.jpg" alt="Consultation session" loading="lazy" />
         <div class="wwo-service-card__icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </div>
@@ -248,6 +258,7 @@
         <a href="/services/#consultation">Book a Session →</a>
       </div>
       <div class="wwo-service-card">
+        <img class="wwo-service-card__photo" src="/photos/coaching-hero.jpg" alt="Parent and teacher coaching session" loading="lazy" />
         <div class="wwo-service-card__icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
@@ -256,6 +267,7 @@
         <a href="/services/#coaching">Start Coaching →</a>
       </div>
       <div class="wwo-service-card">
+        <img class="wwo-service-card__photo" src="/photos/intervention-hero.jpg" alt="Intervention support session with a child" loading="lazy" />
         <div class="wwo-service-card__icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
