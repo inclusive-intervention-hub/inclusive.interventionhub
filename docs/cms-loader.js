@@ -267,6 +267,81 @@
     );
   }
 
+  /**
+   * Pulls a short intro sentence and a "✅ item" checklist out of a resource
+   * description, so the homepage can present it like a service block instead
+   * of a shop card. Falls back gracefully when the description has no
+   * checklist — the intro just becomes the whole description.
+   */
+  function parseResourceHighlights(description) {
+    var lines = String(description || '')
+      .split(/\r?\n/)
+      .map(function (l) { return l.trim(); })
+      .filter(Boolean);
+    var introLines = [];
+    var checklist = [];
+    var seenChecklist = false;
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i];
+      if (/^✅/.test(line)) {
+        seenChecklist = true;
+        checklist.push(line.replace(/^✅\s*/, ''));
+      } else if (!seenChecklist) {
+        if (/^what.?s inside\??$/i.test(line)) continue;
+        introLines.push(line);
+      } else {
+        break; // stop at the first non-checklist line once the checklist has started
+      }
+    }
+    return { intro: introLines.join(' '), checklist: checklist.slice(0, 6) };
+  }
+
+  function buildResourceFeatureBlock(resource, index) {
+    var r = normalizeResource(resource);
+    if (!r || !r.title) return '';
+    var parsed = parseResourceHighlights(r.description);
+
+    var imgHtml = r.image
+      ? '<img src="' + escapeHtml(r.image) + '" alt="' + escapeHtml(r.title) +
+        '" loading="lazy" style="max-width:100%; max-height:100%; object-fit:contain; border-radius:12px;" />'
+      : '<div style="color:#90a89a;">' + SVG_PLACEHOLDER + '</div>';
+
+    var badgeHtml = r.badge
+      ? '<span class="resource-feature__badge">' + escapeHtml(r.badge) + '</span>'
+      : '';
+
+    var checklistHtml = parsed.checklist.length
+      ? '<ul class="resource-feature-includes">' + parsed.checklist.map(function (item) {
+          return '<li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none">' +
+            '<path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>' +
+            escapeHtml(item) + '</li>';
+        }).join('') + '</ul>'
+      : '';
+
+    var previewHtml = r.previewFile
+      ? '<a href="' + escapeHtml(r.previewFile) + '" target="_blank" class="btn btn--outline">Preview</a>'
+      : '';
+
+    var reverseClass = (index % 2 === 1) ? ' resource-feature--reverse' : '';
+
+    return (
+      '<div class="resource-feature' + reverseClass + '">' +
+      '<div class="resource-feature__visual">' + badgeHtml + imgHtml + '</div>' +
+      '<div class="resource-feature__content">' +
+      '<p class="resource-feature__label">Featured Resource</p>' +
+      '<h2>' + escapeHtml(r.title) + '</h2>' +
+      (parsed.intro ? '<p>' + escapeHtml(parsed.intro) + '</p>' : '') +
+      checklistHtml +
+      '<div class="resource-feature-cta">' +
+      '<span class="resource-feature-price">' + escapeHtml(formatPrice(r.price)) + '</span>' +
+      '<a href="' + escapeHtml(r.url) + '" target="_blank" class="btn btn--primary">Buy Now →</a>' +
+      previewHtml +
+      '</div>' +
+      '</div>' +
+      '</div>'
+    );
+  }
+
   function parseFrontmatterMarkdown(text) {
     var result = { meta: {}, body: text || '', raw: text || '' };
     if (!text || typeof text !== 'string') return result;
@@ -625,8 +700,8 @@
           return normalizeResource(r).featured;
         });
         if (!featured.length) featured = resources;
-        var html = featured.map(function (r) {
-          return buildProductCard(r, { includeTags: true });
+        var html = featured.map(function (r, i) {
+          return buildResourceFeatureBlock(r, i);
         }).join('');
         if (html) feat.innerHTML = html;
       });

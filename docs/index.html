@@ -214,10 +214,100 @@
 .wwo-article-body .read-link { font-size: 0.85rem; font-weight: 700; color: var(--green-dark); }
 
 
+/* ── Featured resource (Consultation-style presentation) ── */
+.resource-feature {
+  max-width: 1060px;
+  margin: 0 auto 56px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 56px;
+  align-items: center;
+}
+.resource-feature:last-child { margin-bottom: 0; }
+.resource-feature--reverse { direction: rtl; }
+.resource-feature--reverse > * { direction: ltr; }
+
+.resource-feature__visual {
+  background: linear-gradient(135deg, var(--green-pale) 0%, #d0ede0 100%);
+  border-radius: 20px;
+  height: 320px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+  padding: 24px;
+}
+.resource-feature__visual::before {
+  content: '';
+  position: absolute;
+  width: 160px;
+  height: 160px;
+  background: rgba(61,176,138,0.15);
+  border-radius: 50%;
+  top: -30px;
+  right: -30px;
+}
+.resource-feature__badge {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  background: #F9A825;
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 20px;
+  z-index: 1;
+}
+
+.resource-feature__label {
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--green-light);
+  margin-bottom: 10px;
+}
+.resource-feature__content h2 { font-size: clamp(1.6rem, 2.5vw, 2.1rem); margin-bottom: 16px; color: var(--text); }
+.resource-feature__content p { font-size: 0.95rem; color: var(--text-muted); line-height: 1.75; margin-bottom: 16px; }
+
+.resource-feature-includes {
+  list-style: none;
+  margin: 20px 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.resource-feature-includes li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+.resource-feature-includes li .check {
+  width: 18px;
+  height: 18px;
+  min-width: 18px;
+  background: var(--green-pale);
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.resource-feature-cta { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; }
+.resource-feature-price { font-size: 1.3rem; font-weight: 700; color: var(--green-dark); margin-right: 4px; }
+
 @media (max-width: 860px) {
   .wwo-services-grid { grid-template-columns: 1fr; }
   .wwo-article-card  { grid-template-columns: 1fr; }
   .wwo-article-card img { height: 210px; }
+  .resource-feature { grid-template-columns: 1fr; gap: 32px; }
+  .resource-feature--reverse { direction: ltr; }
+  .resource-feature__visual { height: 220px; }
 }
 </style>
 
@@ -271,25 +361,9 @@
       <p>Printable activity packs, worksheets, and visual supports you can download and use right away.</p>
       <a href="/shop/" class="wwo-cta">Browse All Resources →</a>
     </div>
-    <div id="featured-resources-container" style="display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:20px;"></div>
+    <div id="featured-resources-container"></div>
   </div>
 </section>
-<script>
-(function () {
-  var feat = document.getElementById('featured-resources-container');
-  if (!feat) return;
-  function hidePrices() {
-    feat.querySelectorAll('.product-card').forEach(function (card) {
-      // The price row is the last div in the card body — it contains price + Buy Now button.
-      // Hide only the price element (first child), keep the Buy Now link.
-      var rows = card.querySelectorAll('div[style*="justify-content:space-between"]');
-      rows.forEach(function (row) { row.style.display = 'none'; });
-    });
-  }
-  var obs = new MutationObserver(function () { hidePrices(); });
-  obs.observe(feat, { childList: true, subtree: true });
-})();
-</script>
 
 <!-- ── BAND 3: ARTICLES & TIPS (white bg) ── -->
 <section class="wwo-band wwo-band--surface" id="homepage-articles-section">
