@@ -13,7 +13,7 @@ I saw learners bargain just to skip writing time. *"Can I play first? I need to 
 
 For a long time I thought some of these children were just being difficult. But the more I watched, the more I realized they were not refusing because they did not want to. They were refusing because their hands genuinely could not keep up.
 
-If you are a special educator, a parent, or an occupational therapist supporting a child who struggles with gripping, writing, zipping a bag, or opening a water bottle, this post is for you. Here are five signs that hand strengthening may be exactly what they need.
+If you are a special educator, a parent, or a specialist supporting a child who struggles with gripping, writing, zipping a bag, or opening a water bottle, this post is for you. Here are five signs that hand strengthening may be exactly what they need.
 
 ---
 
@@ -114,7 +114,7 @@ Progressive dot patterns that build hand endurance through hole punching. Eight 
 
 Hand strength builds slowly — one squeeze, one clip, one punch at a time. The children showing these signs are not behind forever. They just need the right starting point and consistent practice.
 
-I know how little time there is in a classroom or therapy session. These resources were made to take the preparation off your plate so you can spend that time where it counts — with the child in front of you.
+I know how little time there is in a classroom or intervention session. These resources were made to take the preparation off your plate so you can spend that time where it counts — with the child in front of you.
 
 ---
 
@@ -129,7 +129,7 @@ Between ages 4 and 6 for most children. A child still using a whole-fist grip pa
 **How long does it take to improve hand strength in children?**
 With around 3 sessions per week, most children show noticeable improvement within 6 to 8 weeks. Progress is gradual but cumulative.
 
-**Can I do hand strengthening activities at home without a therapist?**
+**Can I do hand strengthening activities at home without a specialist?**
 Yes. Playdough, clothespin games, and hole punching are all safe for home use. For older children using resistance tools, a structured program with clear instructions is recommended.
 
 **What is the difference between intrinsic and extrinsic hand muscles?**
