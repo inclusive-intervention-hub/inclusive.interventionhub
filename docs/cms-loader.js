@@ -333,8 +333,8 @@
       checklistHtml +
       '<div class="resource-feature-cta">' +
       '<span class="resource-feature-price">' + escapeHtml(formatPrice(r.price)) + '</span>' +
-      '<a href="' + escapeHtml(r.url) + '" target="_blank" class="btn btn--primary">Buy Now →</a>' +
       previewHtml +
+      '<a href="' + escapeHtml(r.url) + '" target="_blank" class="btn btn--primary">Buy Now →</a>' +
       '</div>' +
       '</div>' +
       '</div>'
