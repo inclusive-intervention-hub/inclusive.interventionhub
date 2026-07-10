@@ -328,7 +328,6 @@
       '<div class="resource-feature' + reverseClass + '">' +
       '<div class="resource-feature__visual">' + badgeHtml + imgHtml + '</div>' +
       '<div class="resource-feature__content">' +
-      '<p class="resource-feature__label">Featured Resource</p>' +
       '<h2>' + escapeHtml(r.title) + '</h2>' +
       (parsed.intro ? '<p>' + escapeHtml(parsed.intro) + '</p>' : '') +
       checklistHtml +
