@@ -816,7 +816,7 @@
     fetchJson('/_data/contact.json').then(function (data) {
       if (!data) return;
       applyDataCmsFields(document, data);
-      hideEmptySocial(document, data, ['instagram', 'facebook', 'pinterest']);
+      hideEmptySocial(document, data, ['instagram', 'facebook']);
     });
   }
 
