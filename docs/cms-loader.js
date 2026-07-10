@@ -320,10 +320,6 @@
         }).join('') + '</ul>'
       : '';
 
-    var previewHtml = r.previewFile
-      ? '<a href="' + escapeHtml(r.previewFile) + '" target="_blank" class="btn btn--outline">Preview</a>'
-      : '';
-
     var reverseClass = (index % 2 === 1) ? ' resource-feature--reverse' : '';
 
     return (
@@ -334,9 +330,7 @@
       (parsed.intro ? '<p>' + escapeHtml(parsed.intro) + '</p>' : '') +
       checklistHtml +
       '<div class="resource-feature-cta">' +
-      '<span class="resource-feature-price">' + escapeHtml(formatPrice(r.price)) + '</span>' +
-      previewHtml +
-      '<a href="' + escapeHtml(r.url) + '" target="_blank" class="btn btn--primary">Buy Now →</a>' +
+      '<a href="/shop/" class="btn btn--primary">See in Resources →</a>' +
       '</div>' +
       '</div>' +
       '</div>'
