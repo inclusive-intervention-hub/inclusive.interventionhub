@@ -211,6 +211,17 @@ h1, h2, h3, h4 { font-family: var(--font-display); line-height: 1.2; }
 .footer__brand-logo { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-weight: 600; font-size: 1.05rem; color: #fff; }
 .footer__brand p { font-size: 0.88rem; line-height: 1.6; opacity: 0.75; }
 
+.footer__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--green-light);
+  opacity: 1;
+}
+.footer__badge svg { flex-shrink: 0; }
+
 .footer h4 { font-family: var(--font-body); font-weight: 600; font-size: 0.95rem; color: #fff; margin-bottom: 16px; letter-spacing: 0.01em; }
 
 .footer__links { list-style: none; display: flex; flex-direction: column; gap: 10px; }
