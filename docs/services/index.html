@@ -148,8 +148,6 @@
       gap: 28px;
       margin-top: 8px;
     }
-    .program-card--wide { grid-column: 1 / -1; }
-
     .program-card {
       background: var(--surface);
       border-radius: var(--radius);
@@ -296,6 +294,7 @@
     .intervention-note { font-size: 0.85rem; color: var(--text-muted); font-style: italic; text-align: center; max-width: 560px; margin: 0 auto 28px; }
 
     .training-list-block { margin-top: 48px; }
+    .training-list-block:first-child { margin-top: 0; }
     .training-list-block__label {
       font-size: 0.78rem;
       font-weight: 700;
@@ -607,28 +606,28 @@
   </div>
 
   <div class="container intervention-programs">
-    <div class="program-grid">
 
-      <!-- Signature Training -->
-      <div class="program-card program-card--wide" role="button" tabindex="0" aria-expanded="false" aria-controls="details-signature">
-        <p class="program-card__label">Signature Training</p>
-        <h3>Building an Inclusive School: A Practical Guide to Special Needs Education</h3>
-        <p class="program-card__tagline">A comprehensive full-day or two-day workshop covering the entire SNEd process — from early identification and referral to assessment, IEP development, classroom supports, intervention planning, and progress monitoring.</p>
-        <p>This training equips schools with a practical framework for implementing inclusive practices and supporting learners with diverse educational needs.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See who it's for</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-signature">
-          <div class="program-card__meta">
-            <div class="program-card__meta-row">
-              <span>Ideal For</span>
-              <p>Whole-school faculty, administrators, and SNEd coordinators seeking a complete, workable framework.</p>
+    <div class="training-list-block">
+      <h3 class="training-list-block__label">Signature Training</h3>
+      <div class="training-list">
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-signature">
+          <div class="training-item__row">
+            <h4>Building an Inclusive School: A Practical Guide to Special Needs Education</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-signature">
+            <p class="training-item__intro">A comprehensive full-day or two-day workshop covering the entire SNEd process — from early identification and referral to assessment, IEP development, classroom supports, intervention planning, and progress monitoring. This training equips schools with a practical framework for implementing inclusive practices and supporting learners with diverse educational needs.</p>
+            <div class="program-card__meta">
+              <div class="program-card__meta-row">
+                <span>Ideal For</span>
+                <p>Whole-school faculty, administrators, and SNEd coordinators seeking a complete, workable framework.</p>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
+      </div>
     </div>
 
     <div class="training-list-block">
