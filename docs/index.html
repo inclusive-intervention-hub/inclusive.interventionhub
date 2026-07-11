@@ -163,6 +163,9 @@
   gap: 14px;
   overflow: hidden;
   transition: background 0.2s, transform 0.2s;
+  text-decoration: none;
+  color: inherit;
+  cursor: pointer;
 }
 .wwo-service-card:hover { background: rgba(255,255,255,0.16); transform: translateY(-2px); }
 .wwo-service-card__photo {
@@ -182,12 +185,6 @@
 }
 .wwo-service-card h3 { font-size: 1.05rem; color: #fff; }
 .wwo-service-card p  { font-size: 0.85rem; color: rgba(255,255,255,0.75); line-height: 1.65; flex: 1; }
-.wwo-service-card a  {
-  font-size: 0.82rem; font-weight: 700; color: #fff;
-  text-decoration: none; opacity: 0.85;
-  display: inline-flex; align-items: center; gap: 4px;
-}
-.wwo-service-card a:hover { opacity: 1; }
 
 /* ── Article card ── */
 .wwo-article-card {
@@ -311,33 +308,30 @@
       <a href="/services/" class="wwo-cta">Explore All Services →</a>
     </div>
     <div class="wwo-services-grid">
-      <div class="wwo-service-card">
+      <a class="wwo-service-card" href="/services/#intervention">
         <img class="wwo-service-card__photo" src="/photos/intervention-hero.jpg" alt="Intervention support session with a child" loading="lazy" />
         <div class="wwo-service-card__icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
         </div>
         <h3>Intervention Support</h3>
         <p>Direct, structured support with individualized plans, progress monitoring, and IEP-aligned strategies.</p>
-        <a href="/services/#intervention">Learn More →</a>
-      </div>
-      <div class="wwo-service-card">
+      </a>
+      <a class="wwo-service-card" href="/services/#training">
         <img class="wwo-service-card__photo" src="/photos/training-hero.jpg" alt="Teacher training session" loading="lazy" />
         <div class="wwo-service-card__icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="9" cy="7" r="4" stroke="currentColor" stroke-width="1.5"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
         </div>
         <h3>Teacher Training</h3>
         <p>Ongoing training that builds your confidence and skills to better support the learners in your care.</p>
-        <a href="/services/#training">Start Training →</a>
-      </div>
-      <div class="wwo-service-card">
+      </a>
+      <a class="wwo-service-card" href="/services/#consultation">
         <img class="wwo-service-card__photo" src="/photos/consultation-hero.jpg" alt="Consultation session" loading="lazy" />
         <div class="wwo-service-card__icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></svg>
         </div>
         <h3>Consultation</h3>
         <p>One-on-one expert sessions for IEP planning, learner assessments, and classroom strategies tailored to your situation.</p>
-        <a href="/services/#consultation">Book a Session →</a>
-      </div>
+      </a>
     </div>
   </div>
 </section>
