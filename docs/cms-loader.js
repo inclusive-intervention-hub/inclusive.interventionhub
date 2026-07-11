@@ -159,6 +159,7 @@
       searchTags: raw.searchTags || '',
       originalPrice: raw.originalPrice || '',
       previewFile: raw.previewFile || '',
+      pricingTiers: Array.isArray(raw.pricingTiers) ? raw.pricingTiers : [],
     };
   }
 
@@ -239,6 +240,9 @@
         '<span style="font-size:1.2rem; font-weight:700; color:#1C4A30;">' +
         escapeHtml(formatPrice(r.price)) + '</span>' +
         '<span style="font-size:0.78rem; font-weight:600; color:#6b7280;"> / user</span>';
+    }
+    if (r.pricingTiers.length) {
+      priceHtml += '<div style="font-size:0.76rem; color:#6b7280; margin-top:4px;">Team &amp; site licenses available</div>';
     }
 
     // ── Preview link — shown alongside Buy Now when a preview file is set ───
@@ -403,6 +407,25 @@
       '<span style="font-size:1.4rem; font-weight:700; color:#1C4A30;">' + escapeHtml(formatPrice(r.price)) + '</span>' +
       '<span style="font-size:0.82rem; font-weight:600; color:#6b7280;"> / user</span>';
 
+    var tiersHtml = '';
+    if (r.pricingTiers.length) {
+      tiersHtml =
+        '<div style="margin:20px 0;">' +
+        '<h3 style="font-size:0.9rem; font-weight:700; color:#1C4A30; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:10px;">Team &amp; Site Licensing</h3>' +
+        '<div style="display:flex; flex-direction:column; gap:8px;">' +
+        r.pricingTiers.map(function (tier) {
+          return (
+            '<div style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:#f7faf8; border-radius:8px; padding:10px 14px;">' +
+            '<div style="font-size:0.88rem; color:#1A2C1A;"><strong>' + escapeHtml(tier.label || '') + '</strong>' +
+            (tier.range ? '<span style="color:#6b7280;"> — ' + escapeHtml(tier.range) + '</span>' : '') + '</div>' +
+            '<span style="font-size:0.92rem; font-weight:700; color:#1C4A30; white-space:nowrap;">' + escapeHtml(formatPrice(tier.price)) + '</span>' +
+            '</div>'
+          );
+        }).join('') +
+        '</div>' +
+        '</div>';
+    }
+
     return (
       badgeHtml +
       imgHtml +
@@ -410,6 +433,7 @@
       (parsed.intro ? '<p style="font-size:0.92rem; color:#546E7A; line-height:1.7; margin-bottom:10px;">' + escapeHtml(parsed.intro) + '</p>' : '') +
       checklistHtml +
       (parsed.outro ? '<p style="font-size:0.88rem; color:#546E7A; line-height:1.7; margin-bottom:16px;">' + escapeHtml(parsed.outro) + '</p>' : '') +
+      tiersHtml +
       '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid #eef1ee;">' +
       '<div>' + priceLine + '</div>' +
       '<div style="display:flex; gap:10px;">' +
