@@ -295,26 +295,56 @@
 
     .intervention-note { font-size: 0.85rem; color: var(--text-muted); font-style: italic; text-align: center; max-width: 560px; margin: 0 auto 28px; }
 
-    .rates-table-wrap {
-      overflow-x: auto;
+    .training-list-block { margin-top: 48px; }
+    .training-list-block__label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--green-light);
+      margin-bottom: 16px;
+    }
+    .training-list {
       background: var(--surface);
       border-radius: var(--radius);
       box-shadow: var(--shadow);
-      margin-bottom: 20px;
+      overflow: hidden;
     }
-    .rates-table { width: 100%; border-collapse: collapse; text-align: left; min-width: 480px; }
-    .rates-table th, .rates-table td { padding: 14px 20px; font-size: 0.88rem; }
-    .rates-table thead th {
-      font-size: 0.72rem;
+    .training-item { border-bottom: 1px solid rgba(0,0,0,0.06); cursor: pointer; }
+    .training-item:last-child { border-bottom: none; }
+    .training-item:focus-visible { outline: 2px solid var(--green-light); outline-offset: -2px; }
+    .training-item__row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      padding: 20px 28px;
+    }
+    .training-item__row h4 { font-size: 1rem; color: var(--text); margin: 0; }
+    .training-item__icon { flex-shrink: 0; transition: transform 0.25s ease; }
+    .training-item.is-expanded .training-item__icon { transform: rotate(180deg); }
+    .training-item__details {
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      padding: 0 28px;
+      transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+    }
+    .training-item.is-expanded .training-item__details {
+      max-height: 900px;
+      opacity: 1;
+      padding: 0 28px 24px;
+    }
+    .training-item__details h5 {
+      font-family: var(--font-body);
+      font-size: 0.8rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-muted);
-      border-bottom: 1px solid rgba(0,0,0,0.08);
+      letter-spacing: 0.03em;
+      color: var(--text);
+      margin: 0 0 10px;
     }
-    .rates-table tbody td { color: var(--text); border-bottom: 1px solid rgba(0,0,0,0.06); }
-    .rates-table tbody tr:last-child td { border-bottom: none; }
-    .rates-table tbody td:last-child { color: var(--amber); font-weight: 700; }
+    .training-item__intro { font-size: 0.9rem; color: var(--text-muted); line-height: 1.7; margin: 0 0 16px; }
 
     @media (max-width: 860px) {
       .service-block { grid-template-columns: 1fr; gap: 32px; }
@@ -322,6 +352,10 @@
       .service-block__visual { height: 220px; }
       .program-grid { grid-template-columns: 1fr; }
       .steps-list { grid-template-columns: 1fr 1fr; }
+      .training-item__row { padding: 16px 20px; gap: 12px; }
+      .training-item__row h4 { font-size: 0.92rem; }
+      .training-item__details { padding: 0 20px; }
+      .training-item.is-expanded .training-item__details { padding: 0 20px 20px; }
     }
     @media (max-width: 560px) {
       .steps-list { grid-template-columns: 1fr; }
@@ -595,218 +629,159 @@
         </div>
       </div>
 
-      <!-- Focused: SNEd Process -->
-      <div class="program-card" role="button" tabindex="0" aria-expanded="false" aria-controls="details-sned-process">
-        <p class="program-card__label">Focused Training</p>
-        <h3>Understanding the Special Needs Education (SNEd) Process</h3>
-        <p class="program-card__tagline">Learn the complete flow of Special Needs Education services, from identifying a learner's needs to implementing interventions and monitoring progress.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See topics &amp; who it's for</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-sned-process">
-          <h4>Topics Include</h4>
-          <ul class="service-includes">
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Referral process</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Gathering background information</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom observations and screening</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Comprehensive assessment</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Eligibility and placement considerations</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Individualized Education Program (IEP) development</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Intervention planning</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Progress monitoring</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Collaboration with families and the multidisciplinary team</li>
-          </ul>
-          <div class="program-card__meta">
-            <div class="program-card__meta-row">
-              <span>Ideal For</span>
-              <p>School administrators, teachers, guidance counselors, and SNEd coordinators.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Focused: Writing IEPs -->
-      <div class="program-card" role="button" tabindex="0" aria-expanded="false" aria-controls="details-iep">
-        <p class="program-card__label">Focused Training</p>
-        <h3>Writing Effective Individualized Education Programs (IEPs)</h3>
-        <p class="program-card__tagline">Develop meaningful, individualized, and measurable education plans that support student growth.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See topics &amp; who it's for</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-iep">
-          <h4>Topics Include</h4>
-          <ul class="service-includes">
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Components of an IEP</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Writing present levels of performance</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Developing measurable annual goals</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Selecting accommodations and modifications</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Planning services and supports</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Monitoring and reviewing progress</li>
-          </ul>
-          <div class="program-card__meta">
-            <div class="program-card__meta-row">
-              <span>Ideal For</span>
-              <p>SNEd teachers, general education teachers, and school administrators.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Focused: Classroom Accommodations & Modifications -->
-      <div class="program-card" role="button" tabindex="0" aria-expanded="false" aria-controls="details-accommodations">
-        <p class="program-card__label">Focused Training</p>
-        <h3>Classroom Accommodations &amp; Modifications</h3>
-        <p class="program-card__tagline">Learn practical strategies to support learners with diverse needs while maintaining meaningful participation in classroom activities.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See topics &amp; who it's for</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-accommodations">
-          <h4>Topics Include</h4>
-          <ul class="service-includes">
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Understanding accommodations vs. modifications</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Academic accommodations</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Environmental supports</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Assessment accommodations</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Instructional adaptations</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom examples across grade levels</li>
-          </ul>
-          <div class="program-card__meta">
-            <div class="program-card__meta-row">
-              <span>Ideal For</span>
-              <p>General education and SNEd teachers.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Focused: Early Identification & Classroom Screening -->
-      <div class="program-card" role="button" tabindex="0" aria-expanded="false" aria-controls="details-early-id">
-        <p class="program-card__label">Focused Training</p>
-        <h3>Early Identification &amp; Classroom Screening</h3>
-        <p class="program-card__tagline">Recognize early signs of developmental and learning differences to support timely referrals and interventions.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See topics &amp; who it's for</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-early-id">
-          <h4>Topics Include</h4>
-          <ul class="service-includes">
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Developmental milestones</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Early warning signs</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom observations</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Informal screening strategies</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Referral procedures</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Communicating concerns with parents</li>
-          </ul>
-          <div class="program-card__meta">
-            <div class="program-card__meta-row">
-              <span>Ideal For</span>
-              <p>Preschool and elementary teachers, guidance counselors, and school leaders.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Focused: Autism in the Classroom -->
-      <div class="program-card" role="button" tabindex="0" aria-expanded="false" aria-controls="details-autism">
-        <p class="program-card__label">Focused Training</p>
-        <h3>Autism in the Classroom</h3>
-        <p class="program-card__tagline">Build confidence in supporting autistic learners through practical, evidence-informed classroom strategies.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See topics &amp; who it's for</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-autism">
-          <h4>Topics Include</h4>
-          <ul class="service-includes">
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Understanding Autism Spectrum Disorder</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Communication differences</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sensory processing</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive functioning</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Positive behavior support</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom accommodations</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Supporting independence</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Collaborating with families</li>
-          </ul>
-          <div class="program-card__meta">
-            <div class="program-card__meta-row">
-              <span>Ideal For</span>
-              <p>Teachers, school staff, therapists, and parents.</p>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Focused: Customized Training -->
-      <div class="program-card" role="button" tabindex="0" aria-expanded="false" aria-controls="details-customized">
-        <p class="program-card__label">Focused Training</p>
-        <h3>Customized Training</h3>
-        <p class="program-card__tagline">Need training on a specific Special Needs Education topic? We can develop sessions tailored to your school's needs.</p>
-        <div class="program-card__toggle">
-          <span class="program-card__toggle-text">See example topics</span>
-          <svg class="program-card__toggle-icon" width="12" height="12" viewBox="0 0 12 12" fill="none"><path d="M2.5 4.5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        </div>
-        <div class="program-card__details" id="details-customized">
-          <h4>Examples Include</h4>
-          <ul class="service-includes">
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inclusive classroom practices</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Positive behavior support</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Parent–school collaboration</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom management for diverse learners</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Transition planning</li>
-            <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Supporting learners with developmental disabilities</li>
-          </ul>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Training Formats & Rates -->
-    <div class="steps-block">
-      <h3>Training Formats &amp; Rates</h3>
-      <div class="rates-table-wrap">
-        <table class="rates-table">
-          <thead>
-            <tr>
-              <th>Training Format</th>
-              <th>Duration</th>
-              <th>Delivery</th>
-              <th>Starting Rate</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Webinar</td>
-              <td>2 hours</td>
-              <td>Online</td>
-              <td>₱5,000</td>
-            </tr>
-            <tr>
-              <td>Half-Day Workshop</td>
-              <td>3–4 hours</td>
-              <td>In-person or online</td>
-              <td>₱12,000</td>
-            </tr>
-            <tr>
-              <td>Full-Day Workshop</td>
-              <td>6–8 hours</td>
-              <td>In-person or online</td>
-              <td>₱20,000</td>
-            </tr>
-            <tr>
-              <td>Two-Day School Training</td>
-              <td>2 days</td>
-              <td>In-person or online</td>
-              <td>Starting at ₱35,000</td>
-            </tr>
-          </tbody>
-        </table>
+    <div class="training-list-block">
+      <h3 class="training-list-block__label">Focused Trainings</h3>
+      <div class="training-list">
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-sned-process">
+          <div class="training-item__row">
+            <h4>Understanding the Special Needs Education (SNEd) Process</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-sned-process">
+            <h5>Topics Include</h5>
+            <ul class="service-includes">
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Referral process</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Gathering background information</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom observations and screening</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Comprehensive assessment</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Eligibility and placement considerations</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Individualized Education Program (IEP) development</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Intervention planning</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Progress monitoring</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Collaboration with families and the multidisciplinary team</li>
+            </ul>
+            <div class="program-card__meta">
+              <div class="program-card__meta-row">
+                <span>Ideal For</span>
+                <p>School administrators, teachers, guidance counselors, and SNEd coordinators.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-iep">
+          <div class="training-item__row">
+            <h4>Writing Effective Individualized Education Programs (IEPs)</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-iep">
+            <h5>Topics Include</h5>
+            <ul class="service-includes">
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Components of an IEP</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Writing present levels of performance</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Developing measurable annual goals</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Selecting accommodations and modifications</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Planning services and supports</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Monitoring and reviewing progress</li>
+            </ul>
+            <div class="program-card__meta">
+              <div class="program-card__meta-row">
+                <span>Ideal For</span>
+                <p>SNEd teachers, general education teachers, and school administrators.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-accommodations">
+          <div class="training-item__row">
+            <h4>Classroom Accommodations &amp; Modifications</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-accommodations">
+            <h5>Topics Include</h5>
+            <ul class="service-includes">
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Understanding accommodations vs. modifications</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Academic accommodations</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Environmental supports</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Assessment accommodations</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Instructional adaptations</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom examples across grade levels</li>
+            </ul>
+            <div class="program-card__meta">
+              <div class="program-card__meta-row">
+                <span>Ideal For</span>
+                <p>General education and SNEd teachers.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-early-id">
+          <div class="training-item__row">
+            <h4>Early Identification &amp; Classroom Screening</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-early-id">
+            <h5>Topics Include</h5>
+            <ul class="service-includes">
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Developmental milestones</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Early warning signs</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom observations</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Informal screening strategies</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Referral procedures</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Communicating concerns with parents</li>
+            </ul>
+            <div class="program-card__meta">
+              <div class="program-card__meta-row">
+                <span>Ideal For</span>
+                <p>Preschool and elementary teachers, guidance counselors, and school leaders.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-autism">
+          <div class="training-item__row">
+            <h4>Autism in the Classroom</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-autism">
+            <h5>Topics Include</h5>
+            <ul class="service-includes">
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Understanding Autism Spectrum Disorder</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Communication differences</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Sensory processing</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Executive functioning</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Positive behavior support</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom accommodations</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Supporting independence</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Collaborating with families</li>
+            </ul>
+            <div class="program-card__meta">
+              <div class="program-card__meta-row">
+                <span>Ideal For</span>
+                <p>Teachers, school staff, therapists, and parents.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="training-item" role="button" tabindex="0" aria-expanded="false" aria-controls="details-customized">
+          <div class="training-item__row">
+            <h4>Customized Training</h4>
+            <svg class="training-item__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </div>
+          <div class="training-item__details" id="details-customized">
+            <p class="training-item__intro">Need training on a specific Special Needs Education topic? We can develop sessions tailored to your school's needs.</p>
+            <h5>Examples Include</h5>
+            <ul class="service-includes">
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Inclusive classroom practices</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Positive behavior support</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Parent–school collaboration</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Classroom management for diverse learners</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Transition planning</li>
+              <li><span class="check"><svg width="10" height="10" viewBox="0 0 10 10" fill="none"><path d="M2 5l2 2 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Supporting learners with developmental disabilities</li>
+            </ul>
+          </div>
+        </div>
+
       </div>
-      <p class="intervention-note">Rates may vary depending on the number of participants, customization, location, and travel requirements. Duration recommendations depend on the topic — we will suggest the appropriate format during booking.</p>
-      <div class="service-cta" style="justify-content:center;">
+
+      <div class="service-cta" style="justify-content:center; margin-top:32px;">
         <a href="/contact/" class="btn btn--primary">Book a Training →</a>
         <a href="mailto:inclusiveinterventionhub@gmail.com" class="btn btn--outline">Email Us</a>
       </div>
@@ -964,6 +939,26 @@
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault();
         setExpanded(!card.classList.contains('is-expanded'));
+      }
+    });
+  });
+
+  document.querySelectorAll('.training-item').forEach(function (item) {
+    var details = item.querySelector('.training-item__details');
+    if (!details) return;
+
+    function setExpanded(expanded) {
+      item.classList.toggle('is-expanded', expanded);
+      item.setAttribute('aria-expanded', expanded);
+    }
+
+    item.addEventListener('click', function () {
+      setExpanded(!item.classList.contains('is-expanded'));
+    });
+    item.addEventListener('keydown', function (e) {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        setExpanded(!item.classList.contains('is-expanded'));
       }
     });
   });
