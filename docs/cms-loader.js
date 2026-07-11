@@ -165,10 +165,15 @@
   function formatPrice(raw) {
     var s = String(raw || '').trim();
     if (!s) return '';
-    if (s.charAt(0) === '$') return s;
+    if (s.charAt(0) === '₱' || s.charAt(0) === '$') return s;
     var n = parseFloat(s);
     if (isNaN(n)) return s;
-    return '$' + n.toFixed(2);
+    var hasCents = Math.round(n * 100) % 100 !== 0;
+    var formatted = n.toLocaleString('en-PH', {
+      minimumFractionDigits: hasCents ? 2 : 0,
+      maximumFractionDigits: 2,
+    });
+    return '₱' + formatted;
   }
 
   function buildProductCard(resource, opts, index) {
