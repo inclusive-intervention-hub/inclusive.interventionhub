@@ -278,7 +278,12 @@
       '<a href="' + escapeHtml(r.url) + '" target="_blank"' +
       ' style="flex:1; text-align:center; background:#1C4A30; color:#fff; padding:9px 12px; border-radius:8px; font-size:0.85rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>' +
       '</div>' +
+      '<div class="product-card__toggle">' +
+      '<span class="product-card__toggle-label">See full details</span>' +
+      '<svg class="product-card__toggle-chevron" width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
       '</div>' +
+      '</div>' +
+      '<div class="product-card__panel"></div>' +
       '</div>'
     );
   }
@@ -377,48 +382,36 @@
     return { intro: introLines.join(' '), checklist: checklist, outro: outroLines.join(' ') };
   }
 
-  function buildProductModalBody(resource) {
+  /**
+   * Builds the content revealed when a shop product card is expanded in place.
+   * Only covers what the collapsed card doesn't already show (image, title,
+   * price, Preview/Buy Now) — the full "what's inside" checklist, any
+   * trailing description text, and team/site licensing tiers.
+   */
+  function buildProductExpandDetails(resource) {
     var r = normalizeResource(resource);
     if (!r || !r.title) return '';
     var parsed = parseResourceFull(r.description);
 
-    var imgHtml = r.image
-      ? '<img src="' + escapeHtml(r.image) + '" alt="' + escapeHtml(r.title) +
-        '" style="width:100%; max-height:320px; object-fit:contain; border-radius:12px; background:#f0f7f3;" />'
-      : '<div style="width:100%; height:220px; background:#f0f7f3; display:flex; align-items:center; justify-content:center; color:#90a89a; border-radius:12px;">' +
-        SVG_PLACEHOLDER + '</div>';
-
-    var badgeHtml = r.badge
-      ? '<span style="display:inline-block; background:#F9A825; color:#fff; font-size:0.75rem; font-weight:700; padding:4px 12px; border-radius:20px; margin-bottom:10px;">' + escapeHtml(r.badge) + '</span>'
-      : '';
-
     var checklistHtml = parsed.checklist.length
-      ? '<ul style="list-style:none; margin:16px 0; padding:0; display:flex; flex-direction:column; gap:8px;">' + parsed.checklist.map(function (item) {
+      ? '<ul style="list-style:none; margin:0 0 12px; padding:0; display:flex; flex-direction:column; gap:8px;">' + parsed.checklist.map(function (item) {
           return '<li style="display:flex; align-items:flex-start; gap:8px; font-size:0.9rem; color:#546E7A;"><span style="color:#1C4A30; font-weight:700;">✓</span>' +
             escapeHtml(item) + '</li>';
         }).join('') + '</ul>'
       : '';
 
-    var previewHtml = r.previewFile
-      ? '<a href="' + escapeHtml(r.previewFile) + '" target="_blank" style="flex:1; text-align:center; background:#fff; color:#1C4A30; border:1px solid #1C4A30; padding:10px 16px; border-radius:8px; font-size:0.9rem; font-weight:600; text-decoration:none;">Preview ↗</a>'
-      : '';
-
-    var priceLine =
-      '<span style="font-size:1.4rem; font-weight:700; color:#1C4A30;">' + escapeHtml(formatPrice(r.price)) + '</span>' +
-      '<span style="font-size:0.82rem; font-weight:600; color:#6b7280;"> / user</span>';
-
     var tiersHtml = '';
     if (r.pricingTiers.length) {
       tiersHtml =
-        '<div style="margin:20px 0;">' +
-        '<h3 style="font-size:0.9rem; font-weight:700; color:#1C4A30; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:10px;">Team &amp; Site Licensing</h3>' +
+        '<div style="margin:16px 0 4px;">' +
+        '<h4 style="font-size:0.85rem; font-weight:700; color:#1C4A30; text-transform:uppercase; letter-spacing:0.03em; margin-bottom:10px;">Team &amp; Site Licensing</h4>' +
         '<div style="display:flex; flex-direction:column; gap:8px;">' +
         r.pricingTiers.map(function (tier) {
           return (
             '<div style="display:flex; align-items:center; justify-content:space-between; gap:12px; background:#f7faf8; border-radius:8px; padding:10px 14px;">' +
-            '<div style="font-size:0.88rem; color:#1A2C1A;"><strong>' + escapeHtml(tier.label || '') + '</strong>' +
+            '<div style="font-size:0.86rem; color:#1A2C1A;"><strong>' + escapeHtml(tier.label || '') + '</strong>' +
             (tier.range ? '<span style="color:#6b7280;"> — ' + escapeHtml(tier.range) + '</span>' : '') + '</div>' +
-            '<span style="font-size:0.92rem; font-weight:700; color:#1C4A30; white-space:nowrap;">' + escapeHtml(formatPrice(tier.price)) + '</span>' +
+            '<span style="font-size:0.9rem; font-weight:700; color:#1C4A30; white-space:nowrap;">' + escapeHtml(formatPrice(tier.price)) + '</span>' +
             '</div>'
           );
         }).join('') +
@@ -427,20 +420,10 @@
     }
 
     return (
-      badgeHtml +
-      imgHtml +
-      '<h2 style="font-size:1.35rem; font-weight:700; color:#1C4A30; margin:16px 0 10px; line-height:1.4;">' + escapeHtml(r.title) + '</h2>' +
-      (parsed.intro ? '<p style="font-size:0.92rem; color:#546E7A; line-height:1.7; margin-bottom:10px;">' + escapeHtml(parsed.intro) + '</p>' : '') +
+      (parsed.intro ? '<p style="font-size:0.88rem; color:#546E7A; line-height:1.7; margin:0 0 12px;">' + escapeHtml(parsed.intro) + '</p>' : '') +
       checklistHtml +
-      (parsed.outro ? '<p style="font-size:0.88rem; color:#546E7A; line-height:1.7; margin-bottom:16px;">' + escapeHtml(parsed.outro) + '</p>' : '') +
-      tiersHtml +
-      '<div style="display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:12px; margin-top:16px; padding-top:16px; border-top:1px solid #eef1ee;">' +
-      '<div>' + priceLine + '</div>' +
-      '<div style="display:flex; gap:10px;">' +
-      previewHtml +
-      '<a href="' + escapeHtml(r.url) + '" target="_blank" style="background:#1C4A30; color:#fff; padding:10px 20px; border-radius:8px; font-size:0.9rem; font-weight:600; text-decoration:none;">Buy Now ↗</a>' +
-      '</div>' +
-      '</div>'
+      (parsed.outro ? '<p style="font-size:0.88rem; color:#546E7A; line-height:1.7; margin:0 0 4px;">' + escapeHtml(parsed.outro) + '</p>' : '') +
+      tiersHtml
     );
   }
 
@@ -854,7 +837,7 @@
     if (!grid) return;
     var resources = await loadResources();
     if (!resources.length) return;
-    // Exposed so the click-to-expand modal can look up full, untruncated
+    // Exposed so the click-to-expand panel can look up full, untruncated
     // resource data by the card's data-idx without re-fetching.
     window.__cmsShopResources = resources;
     var html = resources
@@ -873,7 +856,7 @@
   window.loadAbout = loadAbout;
   window.loadContact = loadContact;
   window.loadResources = loadResources;
-  window.buildProductModalBody = buildProductModalBody;
+  window.buildProductExpandDetails = buildProductExpandDetails;
 
   window.loadBlogPosts = function () {
     return loadBlogPostsParsed();

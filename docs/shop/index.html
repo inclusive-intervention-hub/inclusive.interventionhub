@@ -45,45 +45,27 @@
   .shop-layout { flex-direction: column; padding: 0 12px 40px; }
 }
 
-/* ── Product detail modal ─────────────────── */
-.product-modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(20, 30, 25, 0.55);
-  z-index: 1000;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 40px 16px;
-  overflow-y: auto;
-}
-.product-modal-overlay.open { display: flex; }
-.product-modal {
-  background: #fff;
-  border-radius: 16px;
-  max-width: 560px;
-  width: 100%;
-  padding: 28px;
-  position: relative;
-  box-shadow: 0 20px 60px rgba(0,0,0,0.25);
-}
-.product-modal-close {
-  position: absolute;
-  top: 14px;
-  right: 14px;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  border: none;
-  background: #f0f7f3;
-  color: #1C4A30;
-  font-size: 1.1rem;
-  cursor: pointer;
+/* ── Inline "see full details" accordion ─────────────────── */
+.product-card__toggle {
   display: flex;
   align-items: center;
   justify-content: center;
+  gap: 5px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #eef1ee;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #1C4A30;
 }
-.product-modal-close:hover { background: #e0ede7; }
+.product-card__toggle-chevron { transition: transform 0.25s ease; flex-shrink: 0; }
+.product-card.expanded .product-card__toggle-chevron { transform: rotate(180deg); }
+.product-card__panel {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+.product-card.expanded .product-card__panel { padding: 0 16px 16px; }
   </style>
 </head>
 <body>
@@ -150,14 +132,6 @@
 
 </div><!-- /shop-layout -->
 
-<!-- ═══════════════════════════════════════════ PRODUCT DETAIL MODAL -->
-<div class="product-modal-overlay" id="productModalOverlay">
-  <div class="product-modal">
-    <button class="product-modal-close" id="productModalClose" aria-label="Close">✕</button>
-    <div id="productModalBody"></div>
-  </div>
-</div>
-
 <!-- ═══════════════════════════════════════════ FOOTER -->
 <footer class="footer">
   <div class="footer__inner">
@@ -202,37 +176,44 @@
 <script src="../main.js"></script>
 <script>
 (function () {
-  var overlay = document.getElementById('productModalOverlay');
-  var body = document.getElementById('productModalBody');
-  var closeBtn = document.getElementById('productModalClose');
-  if (!overlay || !body || !closeBtn) return;
+  var container = document.getElementById('shop-resources-container');
+  if (!container) return;
 
-  function openModal(idx) {
-    var resources = window.__cmsShopResources || [];
-    var resource = resources[idx];
-    if (!resource || !window.buildProductModalBody) return;
-    body.innerHTML = window.buildProductModalBody(resource);
-    overlay.classList.add('open');
-  }
-  function closeModal() {
-    overlay.classList.remove('open');
-    body.innerHTML = '';
+  function collapse(card) {
+    var panel = card.querySelector('.product-card__panel');
+    card.classList.remove('expanded');
+    if (panel) panel.style.maxHeight = '0px';
+    var label = card.querySelector('.product-card__toggle-label');
+    if (label) label.textContent = 'See full details';
   }
 
-  document.getElementById('shop-resources-container').addEventListener('click', function (e) {
+  function expand(card) {
+    var panel = card.querySelector('.product-card__panel');
+    if (!panel) return;
+    if (!panel.dataset.loaded) {
+      var resources = window.__cmsShopResources || [];
+      var resource = resources[parseInt(card.getAttribute('data-idx'), 10)];
+      if (resource && window.buildProductExpandDetails) {
+        panel.innerHTML = window.buildProductExpandDetails(resource);
+      }
+      panel.dataset.loaded = 'true';
+    }
+    card.classList.add('expanded');
+    panel.style.maxHeight = panel.scrollHeight + 'px';
+    var label = card.querySelector('.product-card__toggle-label');
+    if (label) label.textContent = 'Hide details';
+  }
+
+  container.addEventListener('click', function (e) {
     // Ignore clicks on the Preview/Buy Now links so they keep working normally
     if (e.target.closest('a')) return;
     var card = e.target.closest('.product-card[data-idx]');
     if (!card) return;
-    openModal(parseInt(card.getAttribute('data-idx'), 10));
-  });
-
-  closeBtn.addEventListener('click', closeModal);
-  overlay.addEventListener('click', function (e) {
-    if (e.target === overlay) closeModal();
-  });
-  document.addEventListener('keydown', function (e) {
-    if (e.key === 'Escape' && overlay.classList.contains('open')) closeModal();
+    if (card.classList.contains('expanded')) {
+      collapse(card);
+    } else {
+      expand(card);
+    }
   });
 })();
 </script>
