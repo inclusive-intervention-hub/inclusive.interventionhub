@@ -110,39 +110,65 @@
 }
 .resource-detail__actions { display: flex; gap: 10px; flex-wrap: wrap; }
 
-/* ── Team & Site Licensing — native <details> disclosure ─── */
-.resource-licensing { margin-top: 4px; border-top: 1px solid #eef1ee; padding-top: 16px; }
-.resource-licensing summary {
+/* ── Team & Site Licensing — accordion row, matching the Services page's
+   Teacher Training list (.training-item) instead of a boxed card ────── */
+.resource-licensing {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
   cursor: pointer;
-  list-style: none;
+  margin-top: 24px;
+}
+.resource-licensing:focus-visible { outline: 2px solid var(--green-light); outline-offset: -2px; }
+.resource-licensing__row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 8px;
-  font-weight: 700;
-  color: #1C4A30;
-  font-size: 0.92rem;
+  gap: 16px;
+  padding: 20px 28px;
 }
-.resource-licensing summary::-webkit-details-marker { display: none; }
-.resource-licensing summary .chevron { transition: transform 0.25s ease; flex-shrink: 0; }
-.resource-licensing[open] summary .chevron { transform: rotate(180deg); }
-.resource-licensing__tiers { display: flex; flex-direction: column; gap: 8px; margin-top: 14px; }
+.resource-licensing__row h4 { font-size: 1rem; color: var(--text); margin: 0; }
+.resource-licensing__icon { flex-shrink: 0; transition: transform 0.25s ease; }
+.resource-licensing.is-expanded .resource-licensing__icon { transform: rotate(180deg); }
+.resource-licensing__details {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding: 0 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+}
+.resource-licensing.is-expanded .resource-licensing__details {
+  max-height: 900px;
+  opacity: 1;
+  padding: 0 28px 24px;
+}
 .resource-licensing__tier {
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  background: #f7faf8;
-  border-radius: 8px;
+  background: var(--green-pale);
+  border-radius: var(--radius-sm);
   padding: 10px 14px;
   font-size: 0.88rem;
-  color: #1A2C1A;
+  color: var(--text);
 }
+.resource-licensing__range { color: var(--text-muted); }
+.resource-licensing__price { font-weight: 700; color: var(--green-dark); white-space: nowrap; }
 
 @media (max-width: 860px) {
   .resource-detail { grid-template-columns: 1fr; gap: 28px; }
   .resource-detail--reverse { direction: ltr; }
   .resource-detail__visual { min-height: 220px; }
+}
+@media (max-width: 560px) {
+  .resource-licensing__row { padding: 16px 20px; gap: 12px; }
+  .resource-licensing__row h4 { font-size: 0.92rem; }
+  .resource-licensing__details { padding: 0 20px; }
+  .resource-licensing.is-expanded .resource-licensing__details { padding: 0 20px 20px; }
 }
   </style>
 </head>
@@ -248,5 +274,32 @@
 
 <script src="../cms-loader.js"></script>
 <script src="../main.js"></script>
+<script>
+(function () {
+  // Resources are injected asynchronously by cms-loader.js, so the toggle is
+  // wired via event delegation on the container rather than querySelectorAll
+  // at page load (mirrors the Services page's .training-item behavior).
+  var container = document.getElementById('shop-resources-container');
+  if (!container) return;
+
+  function toggle(item) {
+    var expanded = !item.classList.contains('is-expanded');
+    item.classList.toggle('is-expanded', expanded);
+    item.setAttribute('aria-expanded', expanded);
+  }
+
+  container.addEventListener('click', function (e) {
+    var item = e.target.closest('.resource-licensing');
+    if (item) toggle(item);
+  });
+  container.addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ') return;
+    var item = e.target.closest('.resource-licensing');
+    if (!item) return;
+    e.preventDefault();
+    toggle(item);
+  });
+})();
+</script>
 </body>
 </html>

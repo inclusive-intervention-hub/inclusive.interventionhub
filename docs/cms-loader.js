@@ -251,26 +251,28 @@
       ? '<a href="' + escapeHtml(r.previewFile) + '" target="_blank" style="text-align:center; background:#fff; color:#1C4A30; border:1px solid #1C4A30; padding:10px 18px; border-radius:8px; font-size:0.9rem; font-weight:600; text-decoration:none;">Preview ↗</a>'
       : '';
 
-    // ── Team & Site Licensing — native <details> disclosure ────────────────
+    // ── Team & Site Licensing — accordion row, same pattern as the Services
+    // page's Teacher Training list (.training-item), not a boxed card ───────
     var licensingHtml = '';
     if (r.pricingTiers.length) {
       licensingHtml =
-        '<details class="resource-licensing">' +
-        '<summary><span>Team &amp; Site Licensing</span>' +
-        '<svg class="chevron" width="12" height="12" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
-        '</summary>' +
-        '<div class="resource-licensing__tiers">' +
+        '<div class="resource-licensing" role="button" tabindex="0" aria-expanded="false" aria-controls="resource-licensing-' + index + '">' +
+        '<div class="resource-licensing__row">' +
+        '<h4>Team &amp; Site Licensing</h4>' +
+        '<svg class="resource-licensing__icon" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="var(--green-dark)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>' +
+        '</div>' +
+        '<div class="resource-licensing__details" id="resource-licensing-' + index + '">' +
         r.pricingTiers.map(function (tier) {
           return (
             '<div class="resource-licensing__tier">' +
             '<div><strong>' + escapeHtml(tier.label || '') + '</strong>' +
-            (tier.range ? '<span style="color:#6b7280;"> — ' + escapeHtml(tier.range) + '</span>' : '') + '</div>' +
-            '<span style="font-weight:700; color:#1C4A30; white-space:nowrap;">' + escapeHtml(formatPrice(tier.price)) + '</span>' +
+            (tier.range ? '<span class="resource-licensing__range"> — ' + escapeHtml(tier.range) + '</span>' : '') + '</div>' +
+            '<span class="resource-licensing__price">' + escapeHtml(formatPrice(tier.price)) + '</span>' +
             '</div>'
           );
         }).join('') +
         '</div>' +
-        '</details>';
+        '</div>';
     }
 
     var reverseClass = (index % 2 === 1) ? ' resource-detail--reverse' : '';
