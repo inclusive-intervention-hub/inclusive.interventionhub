@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-1MGTYCXWQX"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-1MGTYCXWQX');
+  </script>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Parent Portal — Inclusive Intervention Hub</title>
+  <meta name="description" content="Sign in to view your child's baseline assessment and progress reports from Inclusive Intervention Hub." />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800;900&family=DM+Sans:wght@300;400;500;600&display=optional">
+  <link rel="stylesheet" href="../style.css" />
+  <link rel="icon" type="image/png" href="/favicon.png" />
+  <style>
+    .portal-section { padding: 20px 24px 80px; }
+
+    .portal-gate {
+      max-width: 460px; margin: 40px auto 0; background: var(--surface); border-radius: var(--radius);
+      padding: 44px 32px; box-shadow: var(--shadow); text-align: center;
+    }
+    .portal-gate__icon {
+      width: 60px; height: 60px; border-radius: 50%; background: var(--green-pale);
+      display: flex; align-items: center; justify-content: center; margin: 0 auto 18px; color: var(--green-dark);
+    }
+    .portal-gate h2 { font-size: 1.25rem; margin-bottom: 10px; }
+    .portal-gate p { color: var(--text-muted); font-size: 0.92rem; line-height: 1.65; margin-bottom: 24px; }
+
+    .portal-topbar {
+      max-width: 1060px; margin: 0 auto 20px; padding: 0 24px;
+      display: flex; justify-content: flex-end; align-items: center; gap: 12px;
+    }
+    .portal-topbar span { font-size: 0.85rem; color: var(--text-muted); }
+
+    .child-card {
+      max-width: 720px; margin: 0 auto 24px; background: var(--surface);
+      border-radius: var(--radius); padding: 32px; box-shadow: var(--shadow);
+    }
+    .child-card h2 { font-size: 1.3rem; color: var(--text); margin-bottom: 4px; }
+    .child-card__section-label {
+      font-size: 0.76rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--green-light); margin: 22px 0 10px;
+    }
+    .child-card__section-label:first-of-type { margin-top: 20px; }
+
+    .baseline-box { background: var(--green-pale); border-radius: var(--radius-sm); padding: 18px 20px; }
+    .baseline-box p { font-size: 0.92rem; color: var(--text); line-height: 1.65; margin-bottom: 12px; }
+    .baseline-box p:last-child { margin-bottom: 0; }
+
+    .progress-item { border-bottom: 1px solid rgba(0,0,0,0.06); padding: 14px 0; }
+    .progress-item:last-child { border-bottom: none; }
+    .progress-item__date { font-size: 0.78rem; color: var(--text-muted); font-weight: 700; }
+    .progress-item p { font-size: 0.9rem; color: var(--text); margin: 4px 0 8px; line-height: 1.6; }
+
+    .file-btn { margin-top: 4px; }
+    .file-btn:disabled { opacity: 0.6; pointer-events: none; }
+
+    .portal-empty { max-width: 480px; margin: 40px auto 0; text-align: center; padding: 20px 24px; }
+    .portal-empty p { color: var(--text-muted); font-size: 0.95rem; line-height: 1.7; margin-bottom: 24px; }
+  </style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════ NAVBAR -->
+<header class="navbar">
+  <div class="navbar__inner">
+    <a href="/" class="navbar__logo">
+      <img class="navbar__logo-img" src="../photos/logo2.png" alt="" width="28" height="28" loading="eager" decoding="async" />
+      Inclusive Intervention Hub
+    </a>
+    <button class="navbar__hamburger" id="hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="navbar__nav" id="main-nav">
+      <li><a href="/">Home</a></li>
+      <li id="navBlogLi" style="display:none"><a href="/blog/">Blog</a></li>
+      <li class="navbar__dropdown" id="servicesDropdown">
+        <button class="navbar__dropdown-toggle" aria-expanded="false">
+          Services
+          <svg class="chevron" width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M3 5l4 4 4-4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </button>
+        <div class="navbar__dropdown-menu">
+          <a href="/services/#intervention">Intervention Support</a>
+          <a href="/services/#training">Teacher Training</a>
+          <a href="/services/#consultation">Consultation</a>
+        </div>
+      </li>
+      <li id="shopDropdown"><a href="/shop/">Resources</a></li>
+      <li><a href="/portal/" class="active">Portal</a></li>
+      <li><a href="/about/">About</a></li>
+      <li><a href="/contact/">Contact</a></li>
+    </ul>
+  </div>
+</header>
+
+<!-- ═══════════════════════════════════════════ PAGE HEADER -->
+<div class="page-header">
+  <h1>Parent Portal</h1>
+  <p>Sign in with the Google account you gave us to view your child's baseline and progress reports.</p>
+</div>
+
+<!-- ═══════════════════════════════════════════ PORTAL -->
+<section class="portal-section">
+
+  <!-- Signed out -->
+  <div id="portal-signedout" class="portal-gate">
+    <div class="portal-gate__icon">
+      <svg width="26" height="26" viewBox="0 0 26 26" fill="none"><path d="M13 3a10 10 0 100 20 10 10 0 000-20z" stroke="currentColor" stroke-width="1.6"/><path d="M13 8v5l3.5 3.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </div>
+    <h2>Sign in to continue</h2>
+    <p>Use the same Gmail address you gave us when you enrolled.</p>
+    <button class="btn btn--primary" id="portal-signin-btn" style="justify-content:center;">Sign in with Google</button>
+  </div>
+
+  <!-- Signed in, no active records -->
+  <div id="portal-empty" class="portal-empty hidden">
+    <h2 style="font-size:1.2rem;margin-bottom:10px;">No active records found</h2>
+    <p>We couldn't find an active record for this account. If you believe this is a mistake, please get in touch with us.</p>
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+      <a href="/contact/" class="btn btn--primary">Contact Us</a>
+      <button class="btn btn--outline" id="portal-signout-empty-btn">Sign Out</button>
+    </div>
+  </div>
+
+  <!-- Signed in, records found -->
+  <div id="portal-records" class="hidden">
+    <div class="portal-topbar">
+      <span id="portal-signed-in-as"></span>
+      <button class="btn btn--outline" id="portal-signout-btn">Sign Out</button>
+    </div>
+    <div id="portal-children-list"></div>
+  </div>
+
+</section>
+
+<!-- ═══════════════════════════════════════════ FOOTER -->
+<footer class="footer">
+  <div class="footer__inner">
+    <div class="footer__brand">
+      <div class="footer__brand-logo">
+        <img class="footer__brand-mark" src="../photos/logo2.png" alt="" width="26" height="26" loading="lazy" decoding="async" />
+        Inclusive Intervention Hub
+      </div>
+      <p>Equipping One child. One family. One school. At a time.<br/>Supporting Children, Families &amp; Schools.</p>
+      <p class="footer__badge">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none"><path d="M7 1.3l1.5 1 1.9-.4.7 1.8 1.8.7-.4 1.9 1 1.5-1 1.5.4 1.9-1.8.7-.7 1.8-1.9-.4-1.5 1-1.5-1-1.9.4-.7-1.8-1.8-.7.4-1.9-1-1.5 1-1.5-.4-1.9 1.8-.7.7-1.8 1.9.4 1.5-1z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><path d="M4.8 7l1.5 1.5L9.4 4.9" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        DTI Registered Business
+      </p>
+    </div>
+    <div>
+      <h4>Quick Links</h4>
+      <ul class="footer__links">
+        <li id="footerBlogLi" style="display:none"><a href="/blog/">Blog</a></li>
+        <li><a href="/services/">Services</a></li>
+        <li id="footerResourcesLi" style="display:none"><a href="/shop/">Resources</a></li>
+        <li><a href="/about/">About</a></li>
+        <li><a href="/contact/">Contact</a></li>
+        <li><a href="/portal/">Portal</a></li>
+      </ul>
+    </div>
+    <div class="footer__mission">
+      <h4>Mission</h4>
+      <p>Empowering children, families, and schools with expert services and practical resources — so every learner can reach their full potential.</p>
+    </div>
+  </div>
+  <div class="footer__bottom">
+    <span>© 2026 Inclusive Intervention Hub. All rights reserved.</span>
+    <nav class="footer__legal" aria-label="Legal policies">
+      <a href="/refund-policy/">Refund Policy</a>
+      <a href="/privacy-policy/">Privacy Policy</a>
+      <a href="/terms-and-conditions/">Terms &amp; Conditions</a>
+    </nav>
+    <span>Made with care, one learner at a time.</span>
+  </div>
+</footer>
+
+<script src="../cms-loader.js"></script>
+<script src="../main.js"></script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, query, where, orderBy, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// Files are stored as base64 fields directly on the Firestore document (not Firebase Storage),
+// so no separate storage SDK/fetch is needed to view/download them.
+
+// Replace with your real Firebase project config — must match the one used in the admin dashboard's Families tab.
+const firebaseConfig = {
+  apiKey: "AIzaSyAA_mIQdx7lbtlk9fkvwHgVeNPjBOiXKkk",
+  authDomain: "inclusive-intervention-h-96666.firebaseapp.com",
+  projectId: "inclusive-intervention-h-96666",
+  storageBucket: "inclusive-intervention-h-96666.firebasestorage.app",
+  messagingSenderId: "41664410632",
+  appId: "1:41664410632:web:486878dd59406e20cccdbd"
+};
+
+const fbApp = initializeApp(firebaseConfig);
+const fbAuth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+const signedOutEl = document.getElementById('portal-signedout');
+const emptyEl = document.getElementById('portal-empty');
+const recordsEl = document.getElementById('portal-records');
+
+function showPortalState(state) {
+  signedOutEl.classList.toggle('hidden', state !== 'signedout');
+  emptyEl.classList.toggle('hidden', state !== 'empty');
+  recordsEl.classList.toggle('hidden', state !== 'records');
+}
+
+document.getElementById('portal-signin-btn').addEventListener('click', () => {
+  signInWithPopup(fbAuth, new GoogleAuthProvider()).catch((err) => {
+    alert('Sign-in failed: ' + err.message);
+  });
+});
+document.getElementById('portal-signout-btn').addEventListener('click', () => signOut(fbAuth));
+document.getElementById('portal-signout-empty-btn').addEventListener('click', () => signOut(fbAuth));
+
+onAuthStateChanged(fbAuth, async (user) => {
+  if (!user) { showPortalState('signedout'); return; }
+  document.getElementById('portal-signed-in-as').textContent = 'Signed in as ' + user.email;
+
+  try {
+    const q = query(collection(db, 'children'), where('authorizedEmails', 'array-contains', user.email));
+    const snap = await getDocs(q);
+    const children = [];
+    snap.forEach(d => { const data = d.data(); if (data.active) children.push({ id: d.id, ...data }); });
+
+    if (!children.length) { showPortalState('empty'); return; }
+
+    await Promise.all(children.map(async (c) => {
+      const pSnap = await getDocs(query(collection(db, 'children', c.id, 'progress'), orderBy('date', 'desc')));
+      c.progress = pSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    }));
+
+    renderChildren(children);
+    showPortalState('records');
+  } catch (err) {
+    showPortalState('empty');
+    document.getElementById('portal-empty').querySelector('p').textContent =
+      "We couldn't load your records right now (" + err.message + "). Please try again or contact us.";
+  }
+});
+
+function formatDateLong(dateStr) {
+  const parts = dateStr.split('-').map(Number);
+  return new Date(parts[0], parts[1] - 1, parts[2]).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+}
+
+// Keyed lookup for file data — avoids embedding large base64 strings as HTML attributes.
+let fileLookup = {};
+
+function openFile(key, btn) {
+  const file = fileLookup[key];
+  if (!file || !file.fileData) return;
+  const original = btn.textContent;
+  try {
+    const bytes = atob(file.fileData);
+    const arr = new Uint8Array(bytes.length);
+    for (let i = 0; i < bytes.length; i++) arr[i] = bytes.charCodeAt(i);
+    const blob = new Blob([arr], { type: file.mimeType || 'application/octet-stream' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = file.fileName || 'report';
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 10000);
+  } catch (err) {
+    btn.textContent = original;
+    alert("Couldn't open this file: " + err.message);
+  }
+}
+
+function renderChildren(children) {
+  const list = document.getElementById('portal-children-list');
+  fileLookup = {};
+  list.innerHTML = children.map(c => {
+    const progress = [...(c.progress || [])].sort((a, b) => b.date.localeCompare(a.date));
+    if (c.baseline && c.baseline.fileData) fileLookup[c.id + '-baseline'] = c.baseline;
+    progress.forEach(p => { if (p.fileData) fileLookup[c.id + '-' + p.id] = p; });
+
+    return `
+    <div class="child-card">
+      <h2>${c.name}</h2>
+
+      <div class="child-card__section-label">Baseline Assessment</div>
+      ${c.baseline && c.baseline.summary ? `
+        <div class="baseline-box">
+          <p>${c.baseline.summary}</p>
+          ${c.baseline.fileName ? `<button class="btn btn--outline btn--sm file-btn" data-key="${c.id}-baseline">View Baseline Report</button>` : ''}
+        </div>
+      ` : `<p style="font-size:0.9rem;color:var(--text-muted);">Not yet available.</p>`}
+
+      <div class="child-card__section-label">Progress</div>
+      ${progress.length ? progress.map(p => `
+        <div class="progress-item">
+          <div class="progress-item__date">${formatDateLong(p.date)}</div>
+          ${p.summary ? `<p>${p.summary}</p>` : ''}
+          ${p.fileName ? `<button class="btn btn--outline btn--sm file-btn" data-key="${c.id}-${p.id}">View Report</button>` : ''}
+        </div>
+      `).join('') : `<p style="font-size:0.9rem;color:var(--text-muted);">No progress entries yet.</p>`}
+    </div>`;
+  }).join('');
+
+  list.querySelectorAll('.file-btn').forEach(btn => {
+    btn.addEventListener('click', () => openFile(btn.dataset.key, btn));
+  });
+}
+</script>
+</body>
+</html>

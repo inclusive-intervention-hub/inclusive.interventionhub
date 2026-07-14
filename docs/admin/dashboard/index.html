@@ -264,6 +264,7 @@
       <button onclick="switchToTab('blog')" class="sb-link" style="width:100%;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;text-align:left;padding-left:2rem;font-size:.82rem;">📝 Blog Posts</button>
       <button onclick="switchToTab('products')" class="sb-link" style="width:100%;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;text-align:left;padding-left:2rem;font-size:.82rem;">⭐ Product Listing</button>
       <button onclick="switchToTab('cms-settings')" class="sb-link" style="width:100%;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;text-align:left;padding-left:2rem;font-size:.82rem;">⚙️ CMS Settings</button>
+      <button onclick="switchToTab('families')" class="sb-link" style="width:100%;border:none;background:transparent;color:rgba(255,255,255,.7);cursor:pointer;text-align:left;padding-left:2rem;font-size:.82rem;">👪 Families</button>
     </div>
     <a href="/" target="_blank" class="sb-link">↗ Live Site</a>
   </nav>
@@ -300,6 +301,7 @@
     <button class="mob-nav-sub" onclick="mobSwitchTab('blog')">📝 Blog Posts</button>
     <button class="mob-nav-sub" onclick="mobSwitchTab('products')">⭐ Product Listing</button>
     <button class="mob-nav-sub" onclick="mobSwitchTab('cms-settings')">⚙️ CMS Settings</button>
+    <button class="mob-nav-sub" onclick="mobSwitchTab('families')">👪 Families</button>
   </div>
   <a href="/" target="_blank" class="mob-nav-link" onclick="closeMobMenu()">↗ Live Site</a>
 
@@ -633,6 +635,54 @@
     </div>
   </div>
 
+  <!-- ─────────────── PARENT PORTAL — FAMILIES ─────────────── -->
+  <div id="tab-families" class="tab-panel">
+
+    <!-- Sign-in gate (shown when not Firebase-signed-in) -->
+    <div id="fam-signin-box" class="ga4-connect-box">
+      <div style="font-size:2.5rem;margin-bottom:0.75rem;">👪</div>
+      <h2>Manage Parent Portal</h2>
+      <p>Sign in with your Inclusive Intervention Hub Google account to add families, upload baseline &amp; progress reports, and control who can view them.</p>
+      <button class="btn btn--primary" id="fam-signin-btn" style="font-size:0.95rem;padding:0.6rem 1.5rem;">Sign in with Google</button>
+    </div>
+
+    <!-- Wrong account (shown when signed in as someone other than the trusted admin email) -->
+    <div id="fam-wrong-account-box" class="box" style="display:none;border-color:#fecaca;">
+      <h2 style="color:#991b1b;">Not Authorized</h2>
+      <p style="font-size:.88rem;color:var(--muted);margin-bottom:1rem;">
+        You're signed in as <strong id="fam-wrong-email"></strong>, which isn't the account authorized to manage families.
+        Sign out and sign in again with the correct account.
+      </p>
+      <button class="btn btn--outline" id="fam-signout-wrong-btn">Sign Out</button>
+    </div>
+
+    <!-- Main families UI (shown once signed in as the authorized admin) -->
+    <div id="fam-main" style="display:none;">
+      <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem;flex-wrap:wrap;gap:.5rem;">
+        <h2 style="font-size:1.05rem;font-weight:700;color:var(--green);">Families</h2>
+        <div style="display:flex;align-items:center;gap:.75rem;">
+          <span style="font-size:.82rem;color:var(--muted);" id="fam-signed-in-as"></span>
+          <button class="btn btn--ghost btn--sm" id="fam-signout-btn">Sign Out</button>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2>Add a Child</h2>
+        <div class="field"><label>Child's Name *</label><input type="text" id="fc-name" placeholder="e.g. Juan Dela Cruz" /></div>
+        <div class="field"><label>Parent Email(s) *</label><input type="text" id="fc-emails" placeholder="parent1@gmail.com, parent2@gmail.com" /></div>
+        <p style="font-size:.76rem;color:var(--muted);margin:-.5rem 0 .85rem;">Separate multiple emails with commas. These must be the exact Gmail address each parent will sign in with.</p>
+        <div class="btn-row">
+          <button class="btn btn--primary" id="fam-add-btn">+ Add Child</button>
+          <span class="cm-msg" id="fam-add-msg"></span>
+        </div>
+      </div>
+
+      <h2 style="font-size:1.05rem;font-weight:700;color:var(--green);margin:1.5rem 0 1rem;">All Families</h2>
+      <div id="fam-list"><div class="cm-empty">Loading…</div></div>
+    </div>
+
+  </div>
+
 </main>
 </div><!-- /.content-wrap -->
 
@@ -660,6 +710,7 @@ function mobSwitchTab(tabName) {
   if (tabName === 'cms-settings' && getCMSToken()) {
     document.getElementById('gh-token-input').placeholder = '••••••• (token already saved)';
   }
+  if (tabName === 'families' && window.initFamiliesTab) window.initFamiliesTab();
 }
 
 // ── Storage helpers ──
@@ -1205,6 +1256,7 @@ function switchToTab(tabName) {
   if (tabName === 'cms-settings' && getCMSToken()) {
     document.getElementById('gh-token-input').placeholder = '••••••• (token already saved)';
   }
+  if (tabName === 'families' && window.initFamiliesTab) window.initFamiliesTab();
 }
 
 // ─────────────────────────────────────────
@@ -1750,6 +1802,285 @@ renderSales();
 // Pre-load photos for the CMS photo pickers (non-blocking)
 loadCMSPhotos().then(() => { renderPhotoGrid('bf-photo-grid','bf-image'); renderPhotoGrid('pf-photo-grid','pf-image'); });
 </script>
+
+<!-- ─────────────────────────────────────────
+     PARENT PORTAL — FAMILIES (Firebase)
+     ───────────────────────────────────────── -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged, signOut
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+import {
+  getFirestore, collection, doc, addDoc, updateDoc, deleteDoc, onSnapshot, serverTimestamp, query, orderBy, getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+// Files are stored as base64 fields directly on the Firestore document (not Firebase Storage,
+// which requires the paid Blaze plan) — see MAX_FILE_BYTES below for the resulting size limit.
+
+// Replace with your real Firebase project config — Firebase Console → Project Settings → Your apps → Web app.
+// This object is not secret; access is controlled entirely by the Firestore security rules.
+const firebaseConfig = {
+  apiKey: "AIzaSyAA_mIQdx7lbtlk9fkvwHgVeNPjBOiXKkk",
+  authDomain: "inclusive-intervention-h-96666.firebaseapp.com",
+  projectId: "inclusive-intervention-h-96666",
+  storageBucket: "inclusive-intervention-h-96666.firebasestorage.app",
+  messagingSenderId: "41664410632",
+  appId: "1:41664410632:web:486878dd59406e20cccdbd"
+};
+const ADMIN_EMAIL = 'inclusiveinterventionhub@gmail.com';
+const MAX_FILE_BYTES = 700 * 1024; // Firestore documents cap out at 1MB total
+
+const fbApp = initializeApp(firebaseConfig);
+const fbAuth = getAuth(fbApp);
+const db = getFirestore(fbApp);
+
+let childrenCache = {};
+let unsubscribeChildren = null;
+
+function famShowState(state, email) {
+  document.getElementById('fam-signin-box').style.display = state === 'signedout' ? 'block' : 'none';
+  document.getElementById('fam-wrong-account-box').style.display = state === 'wrong' ? 'block' : 'none';
+  document.getElementById('fam-main').style.display = state === 'ok' ? 'block' : 'none';
+  if (state === 'wrong') document.getElementById('fam-wrong-email').textContent = email;
+  if (state === 'ok') document.getElementById('fam-signed-in-as').textContent = 'Signed in as ' + email;
+}
+
+onAuthStateChanged(fbAuth, (user) => {
+  if (!user) {
+    famShowState('signedout');
+    if (unsubscribeChildren) { unsubscribeChildren(); unsubscribeChildren = null; }
+    return;
+  }
+  if (user.email !== ADMIN_EMAIL) { famShowState('wrong', user.email); return; }
+  famShowState('ok', user.email);
+  watchChildren();
+});
+
+document.getElementById('fam-signin-btn').addEventListener('click', () => {
+  signInWithPopup(fbAuth, new GoogleAuthProvider()).catch((err) => {
+    alert('Sign-in failed: ' + err.message);
+  });
+});
+document.getElementById('fam-signout-wrong-btn').addEventListener('click', () => signOut(fbAuth));
+document.getElementById('fam-signout-btn').addEventListener('click', () => signOut(fbAuth));
+
+function watchChildren() {
+  if (unsubscribeChildren) unsubscribeChildren();
+  unsubscribeChildren = onSnapshot(collection(db, 'children'), (snap) => {
+    childrenCache = {};
+    snap.forEach(d => childrenCache[d.id] = d.data());
+    renderFamilyList();
+  }, (err) => {
+    document.getElementById('fam-list').innerHTML = `<div class="cm-empty">Couldn't load families: ${err.message}</div>`;
+  });
+}
+
+function renderProgressList(progress) {
+  if (!progress || !progress.length) return '<p style="font-size:.84rem;color:var(--muted);">No progress entries yet.</p>';
+  const sorted = [...progress].sort((a, b) => b.date.localeCompare(a.date));
+  return sorted.map(p => `
+    <div class="item">
+      <div class="item__info">
+        <div class="item__title">${p.date} — ${p.summary || ''}</div>
+        ${p.fileName ? `<div class="item__meta">${p.fileName}</div>` : ''}
+      </div>
+    </div>`).join('');
+}
+
+function renderChildCard(id, c, progress) {
+  const emails = (c.authorizedEmails || []).join(', ');
+  return `
+  <div class="box">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:1rem;margin-bottom:.75rem;flex-wrap:wrap;">
+      <div>
+        <h2 style="margin-bottom:.2rem;">${c.name}</h2>
+        <div class="item__meta">${emails}</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:.75rem;">
+        <label class="tog" title="Active"><input type="checkbox" ${c.active ? 'checked' : ''} data-fam-toggle="${id}"><span class="tog-s"></span></label>
+        <button class="btn btn--danger btn--sm" data-fam-delete="${id}">Delete</button>
+      </div>
+    </div>
+
+    <div class="field"><label>Parent Email(s)</label><input type="text" id="fc-emails-${id}" value="${emails}" /></div>
+    <div class="btn-row" style="margin-bottom:1rem;">
+      <button class="btn btn--outline btn--sm" data-fam-save-emails="${id}">Save Emails</button>
+      <span class="cm-msg" id="fam-emails-msg-${id}"></span>
+    </div>
+
+    <hr class="section-sep" />
+    <h3 style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.5rem;">Baseline Assessment</h3>
+    <div class="field"><label>Summary</label><textarea id="fb-summary-${id}" rows="2">${c.baseline?.summary || ''}</textarea></div>
+    <div class="field">
+      <label>File${c.baseline?.fileName ? ` — current: <code>${c.baseline.fileName}</code>` : ''}</label>
+      <div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;">
+        <label class="btn btn--teal btn--sm" style="cursor:pointer;">⬆ Upload File<input type="file" id="fb-file-${id}" style="display:none;" /></label>
+        <span id="fb-status-${id}" style="font-size:.78rem;color:var(--muted);"></span>
+      </div>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn--primary btn--sm" data-fam-save-baseline="${id}">Save Baseline</button>
+      <span class="cm-msg" id="fam-baseline-msg-${id}"></span>
+    </div>
+
+    <hr class="section-sep" />
+    <h3 style="font-size:.88rem;font-weight:700;color:var(--text);margin-bottom:.5rem;">Progress Entries</h3>
+    <div id="fam-progress-list-${id}">${renderProgressList(progress)}</div>
+    <div class="fg3" style="margin-top:.75rem;">
+      <div class="field"><label>Date</label><input type="date" id="fp-date-${id}" /></div>
+      <div class="field" style="grid-column:span 2;"><label>Summary</label><input type="text" id="fp-summary-${id}" placeholder="Progress notes..." /></div>
+    </div>
+    <div class="field">
+      <label>File (optional)</label>
+      <label class="btn btn--teal btn--sm" style="cursor:pointer;display:inline-flex;">⬆ Upload File<input type="file" id="fp-file-${id}" style="display:none;" /></label>
+      <span id="fp-status-${id}" style="font-size:.78rem;color:var(--muted);margin-left:.5rem;"></span>
+    </div>
+    <div class="btn-row">
+      <button class="btn btn--primary btn--sm" data-fam-add-progress="${id}">+ Add Progress Entry</button>
+      <span class="cm-msg" id="fam-progress-msg-${id}"></span>
+    </div>
+  </div>`;
+}
+
+async function renderFamilyList() {
+  const ids = Object.keys(childrenCache);
+  const el = document.getElementById('fam-list');
+  if (!ids.length) { el.innerHTML = '<div class="cm-empty">No families yet — add one above.</div>'; return; }
+  el.innerHTML = '<div class="cm-empty">Loading…</div>';
+  const progressByChild = {};
+  await Promise.all(ids.map(async (id) => {
+    const snap = await getDocs(query(collection(db, 'children', id, 'progress'), orderBy('date', 'desc')));
+    progressByChild[id] = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+  }));
+  el.innerHTML = ids.map(id => renderChildCard(id, childrenCache[id], progressByChild[id])).join('');
+}
+
+// Event delegation for the dynamically-rendered child cards
+document.getElementById('fam-list').addEventListener('click', (e) => {
+  const del = e.target.closest('[data-fam-delete]');
+  if (del) { famDeleteChild(del.dataset.famDelete); return; }
+  const saveEmails = e.target.closest('[data-fam-save-emails]');
+  if (saveEmails) { famUpdateEmails(saveEmails.dataset.famSaveEmails); return; }
+  const saveBaseline = e.target.closest('[data-fam-save-baseline]');
+  if (saveBaseline) { famSaveBaseline(saveBaseline.dataset.famSaveBaseline); return; }
+  const addProgress = e.target.closest('[data-fam-add-progress]');
+  if (addProgress) { famAddProgress(addProgress.dataset.famAddProgress); return; }
+});
+document.getElementById('fam-list').addEventListener('change', (e) => {
+  const toggle = e.target.closest('[data-fam-toggle]');
+  if (toggle) famToggleActive(toggle.dataset.famToggle, toggle.checked);
+});
+
+document.getElementById('fam-add-btn').addEventListener('click', async () => {
+  const name = document.getElementById('fc-name').value.trim();
+  const emailsRaw = document.getElementById('fc-emails').value.trim();
+  if (!name || !emailsRaw) { showCMSMsg('fam-add-msg', 'Name and at least one email are required.', 'err'); return; }
+  const authorizedEmails = emailsRaw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  try {
+    await addDoc(collection(db, 'children'), {
+      name, authorizedEmails, active: true,
+      createdAt: serverTimestamp(),
+      baseline: null
+    });
+    document.getElementById('fc-name').value = '';
+    document.getElementById('fc-emails').value = '';
+    showCMSMsg('fam-add-msg', '✓ Child added.', 'ok');
+  } catch (err) { showCMSMsg('fam-add-msg', 'Error: ' + err.message, 'err'); }
+});
+
+async function famToggleActive(id, active) {
+  try { await updateDoc(doc(db, 'children', id), { active }); }
+  catch (err) { alert('Error updating status: ' + err.message); }
+}
+
+async function famDeleteChild(id) {
+  if (!confirm('Delete this child record? This cannot be undone.')) return;
+  try {
+    const snap = await getDocs(collection(db, 'children', id, 'progress'));
+    await Promise.all(snap.docs.map(d => deleteDoc(d.ref)));
+    await deleteDoc(doc(db, 'children', id));
+  }
+  catch (err) { alert('Error deleting: ' + err.message); }
+}
+
+async function famUpdateEmails(id) {
+  const raw = document.getElementById(`fc-emails-${id}`).value.trim();
+  const authorizedEmails = raw.split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  try {
+    await updateDoc(doc(db, 'children', id), { authorizedEmails });
+    showCMSMsg(`fam-emails-msg-${id}`, '✓ Saved.', 'ok');
+  } catch (err) { showCMSMsg(`fam-emails-msg-${id}`, 'Error: ' + err.message, 'err'); }
+}
+
+function readFileAsBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result.split(',')[1]);
+    reader.onerror = () => reject(reader.error);
+    reader.readAsDataURL(file);
+  });
+}
+
+async function uploadChildFile(fileInputEl, statusEl) {
+  const file = fileInputEl.files[0];
+  if (!file) return null;
+  if (file.size > MAX_FILE_BYTES) {
+    statusEl.textContent = `File too large (${Math.round(file.size / 1024)}KB) — please keep it under ${Math.round(MAX_FILE_BYTES / 1024)}KB.`;
+    throw new Error('File too large');
+  }
+  statusEl.textContent = 'Reading file…';
+  const fileData = await readFileAsBase64(file);
+  statusEl.textContent = '✓ Ready to save';
+  return { fileName: file.name, mimeType: file.type || 'application/octet-stream', fileData };
+}
+
+async function famSaveBaseline(id) {
+  const summary = document.getElementById(`fb-summary-${id}`).value.trim();
+  const fileInput = document.getElementById(`fb-file-${id}`);
+  const statusEl = document.getElementById(`fb-status-${id}`);
+  try {
+    const uploaded = await uploadChildFile(fileInput, statusEl);
+    const existing = childrenCache[id]?.baseline || {};
+    const baseline = {
+      summary,
+      fileName: uploaded?.fileName || existing.fileName || null,
+      mimeType: uploaded?.mimeType || existing.mimeType || null,
+      fileData: uploaded?.fileData || existing.fileData || null,
+      uploadedAt: serverTimestamp()
+    };
+    await updateDoc(doc(db, 'children', id), { baseline });
+    showCMSMsg(`fam-baseline-msg-${id}`, '✓ Baseline saved.', 'ok');
+  } catch (err) { showCMSMsg(`fam-baseline-msg-${id}`, 'Error: ' + err.message, 'err'); }
+}
+
+async function famAddProgress(id) {
+  const date = document.getElementById(`fp-date-${id}`).value;
+  const summary = document.getElementById(`fp-summary-${id}`).value.trim();
+  const fileInput = document.getElementById(`fp-file-${id}`);
+  const statusEl = document.getElementById(`fp-status-${id}`);
+  if (!date) { showCMSMsg(`fam-progress-msg-${id}`, 'Date is required.', 'err'); return; }
+  try {
+    const uploaded = await uploadChildFile(fileInput, statusEl);
+    await addDoc(collection(db, 'children', id, 'progress'), {
+      date, summary,
+      fileName: uploaded?.fileName || null,
+      mimeType: uploaded?.mimeType || null,
+      fileData: uploaded?.fileData || null,
+      uploadedAt: serverTimestamp()
+    });
+    document.getElementById(`fp-date-${id}`).value = '';
+    document.getElementById(`fp-summary-${id}`).value = '';
+    showCMSMsg(`fam-progress-msg-${id}`, '✓ Progress entry added.', 'ok');
+    renderFamilyList();
+  } catch (err) { showCMSMsg(`fam-progress-msg-${id}`, 'Error: ' + err.message, 'err'); }
+}
+
+// Exposed so the classic <script> tab-switcher above can trigger a refresh when this tab opens
+window.initFamiliesTab = function () {
+  if (fbAuth.currentUser) renderFamilyList();
+};
+</script>
+
 </div><!-- end dashboard-root -->
 </body>
 </html>
